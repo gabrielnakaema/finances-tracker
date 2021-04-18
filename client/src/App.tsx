@@ -9,10 +9,34 @@ interface Entry {
 
 function App() {
   const [data, setData] = useState<Entry[]>();
+  const [newValue, setNewValue] = useState('');
+  const [newDescription, setNewDescription] = useState('');
 
   useEffect(() => {
     setData(mockData);
   }, []);
+
+  function handleSubmit() {
+    if (data) {
+      const newEntry = {
+        id: data?.length + 1,
+        value: Number(newValue),
+        description: newDescription,
+      };
+      setData([...data, newEntry]);
+      setNewValue('');
+      setNewDescription('');
+    } else {
+      const newEntry = {
+        id: 1,
+        value: Number(newValue),
+        description: newDescription,
+      };
+      setData([newEntry]);
+      setNewValue('');
+      setNewDescription('');
+    }
+  }
 
   return (
     <div
@@ -21,16 +45,29 @@ function App() {
       <h1>Finances Tracker</h1>
       <h2>Add New Entry</h2>
       Value
-      <input />
+      <input
+        value={newValue}
+        onChange={(e) => {
+          e.preventDefault();
+          setNewValue(e.target.value);
+        }}
+      />
       Description
-      <input />
+      <input
+        value={newDescription}
+        onChange={(e) => {
+          e.preventDefault();
+          setNewDescription(e.target.value);
+        }}
+      />
+      <button onClick={handleSubmit}>Create</button>
       <h2>Entry List</h2>
       {data ? (
         data.map((el) => (
           <div style={{ width: '50%', textAlign: 'center', margin: '1rem 0' }}>
             {el.description}
             <br />
-            {el.value}
+            {el.value.toFixed(2)}
           </div>
         ))
       ) : (
