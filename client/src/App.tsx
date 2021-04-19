@@ -1,5 +1,6 @@
 import { mockData } from './mockData';
 import { useState, useEffect } from 'react';
+import EntryForm from './components/EntryForm';
 
 interface Entry {
   id: number;
@@ -7,10 +8,13 @@ interface Entry {
   description: string;
 }
 
+interface NewEntry {
+  value: number;
+  description: string;
+}
+
 function App() {
   const [data, setData] = useState<Entry[]>();
-  const [newValue, setNewValue] = useState('');
-  const [newDescription, setNewDescription] = useState('');
   const [total, setTotal] = useState(0.0);
 
   useEffect(() => {
@@ -23,25 +27,22 @@ function App() {
     }
   }, [data]);
 
-  function handleSubmit() {
+  function addNewEntry(newEntry: NewEntry) {
     if (data) {
-      const newEntry = {
-        id: data?.length + 1,
-        value: Number(newValue),
-        description: newDescription,
-      };
-      setData([...data, newEntry]);
-      setNewValue('');
-      setNewDescription('');
+      setData([
+        ...data,
+        {
+          id: data?.length + 1,
+          ...newEntry,
+        },
+      ]);
     } else {
-      const newEntry = {
-        id: 1,
-        value: Number(newValue),
-        description: newDescription,
-      };
-      setData([newEntry]);
-      setNewValue('');
-      setNewDescription('');
+      setData([
+        {
+          id: 1,
+          ...newEntry,
+        },
+      ]);
     }
   }
 
@@ -51,24 +52,7 @@ function App() {
     >
       <h1>Finances Tracker</h1>
       <h2>Total : {total.toFixed(2)}</h2>
-      <h2>Add New Entry</h2>
-      Value
-      <input
-        value={newValue}
-        onChange={(e) => {
-          e.preventDefault();
-          setNewValue(e.target.value);
-        }}
-      />
-      Description
-      <input
-        value={newDescription}
-        onChange={(e) => {
-          e.preventDefault();
-          setNewDescription(e.target.value);
-        }}
-      />
-      <button onClick={handleSubmit}>Create</button>
+      <EntryForm addNewEntry={addNewEntry} />
       <h2>Entry List</h2>
       {data ? (
         data.map((el) => (
