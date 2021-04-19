@@ -22,6 +22,7 @@ const EntryForm = (props: EntryFormProps) => {
     props.addNewEntry(newEntry);
     setValue('');
     setDescription('');
+    setIsExpense(true);
   };
 
   return (
@@ -33,7 +34,7 @@ const EntryForm = (props: EntryFormProps) => {
           value="expense"
           name="expense-type"
           checked={isExpense}
-          onClick={() => setIsExpense(true)}
+          onChange={() => setIsExpense(true)}
         />{' '}
         Expense
         <input
@@ -41,7 +42,7 @@ const EntryForm = (props: EntryFormProps) => {
           value="income"
           name="expense-type"
           checked={!isExpense}
-          onClick={() => setIsExpense(false)}
+          onChange={() => setIsExpense(false)}
         />{' '}
         Income
       </div>
