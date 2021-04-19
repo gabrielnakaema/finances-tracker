@@ -1,6 +1,7 @@
 import { mockData } from './mockData';
 import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
+import EntryList from './components/EntryList';
 
 interface Entry {
   id: number;
@@ -53,18 +54,7 @@ function App() {
       <h1>Finances Tracker</h1>
       <h2>Total : {total.toFixed(2)}</h2>
       <EntryForm addNewEntry={addNewEntry} />
-      <h2>Entry List</h2>
-      {data ? (
-        data.map((el) => (
-          <div style={{ width: '50%', textAlign: 'center', margin: '1rem 0' }}>
-            {el.description}
-            <br />
-            {el.value.toFixed(2)}
-          </div>
-        ))
-      ) : (
-        <></>
-      )}
+      <EntryList data={data} />
     </div>
   );
 }
