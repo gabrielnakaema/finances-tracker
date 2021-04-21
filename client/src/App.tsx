@@ -2,11 +2,13 @@ import { mockData } from './mockData';
 import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
+import format from 'date-fns/format';
 
 interface Entry {
   id: number;
   value: number;
   description: string;
+  date: string;
 }
 
 interface NewEntry {
@@ -34,6 +36,7 @@ function App() {
         ...data,
         {
           id: data?.length + 1,
+          date: format(new Date(), 'yyyy-MM-dd'),
           ...newEntry,
         },
       ]);
@@ -41,12 +44,12 @@ function App() {
       setData([
         {
           id: 1,
+          date: format(new Date(), 'yyyy-MM-dd'),
           ...newEntry,
         },
       ]);
     }
   }
-
   return (
     <div
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
