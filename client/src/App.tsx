@@ -18,19 +18,12 @@ interface NewEntry {
 
 function App() {
   const [data, setData] = useState<Entry[]>();
-  const [total, setTotal] = useState(0.0);
 
   useEffect(() => {
     setData(mockData);
   }, []);
 
-  useEffect(() => {
-    if (data) {
-      setTotal(data?.reduce((acc, el) => acc + el.value, 0));
-    }
-  }, [data]);
-
-  function addNewEntry(newEntry: NewEntry) {
+  const addNewEntry = (newEntry: NewEntry) => {
     if (data) {
       setData([
         ...data,
@@ -49,13 +42,12 @@ function App() {
         },
       ]);
     }
-  }
+  };
   return (
     <div
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <h1>Finances Tracker</h1>
-      <h2>Total : {total.toFixed(2)}</h2>
       <EntryForm addNewEntry={addNewEntry} />
       <EntryList data={data} />
     </div>
