@@ -1,5 +1,8 @@
 import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
+import isSameMonth from 'date-fns/isSameMonth';
+import { useState, useEffect } from 'react';
+import addMonths from 'date-fns/addMonths';
 
 interface Entry {
   id: number;
@@ -13,11 +16,46 @@ interface EntryListProps {
 }
 
 const EntryList = (props: EntryListProps) => {
+  const [displayData, setDisplayData] = useState<Entry[]>([]);
+  const [monthlyTotal, setMonthlyTotal] = useState(0.0);
+  const [filterDate, setFilterDate] = useState<Date>(new Date());
+
+  useEffect(() => {
+    if (props.data) {
+      setDisplayData(
+        props.data.filter((el) => isSameMonth(parseISO(el.date), filterDate))
+      );
+    }
+  }, [props.data, filterDate]);
+
+  useEffect(() => {
+    setMonthlyTotal(displayData.reduce((acc, el) => acc + el.value, 0));
+  }, [displayData, filterDate]);
+
+  const handleDecreaseMonth = () => {
+    setFilterDate(addMonths(filterDate, -1));
+  };
+
+  const handleIncreaseMonth = () => {
+    setFilterDate(addMonths(filterDate, 1));
+  };
+
   return (
     <>
       <h2>Entry List</h2>
-      {props.data ? (
-        props.data.map((el) => (
+      <div>
+        <button onClick={handleDecreaseMonth}>{'<'}</button>
+        {format(filterDate, 'MMM, yyyy')}
+        <button
+          onClick={handleIncreaseMonth}
+          disabled={isSameMonth(filterDate, new Date())}
+        >
+          {'>'}
+        </button>
+      </div>
+      <h2>Total : {monthlyTotal.toFixed(2)}</h2>
+      {displayData ? (
+        displayData.map((el) => (
           <div
             style={{
               width: '50%',
