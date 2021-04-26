@@ -2,7 +2,6 @@ import { mockData } from './mockData';
 import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
-import format from 'date-fns/format';
 
 interface Entry {
   id: number;
@@ -14,10 +13,11 @@ interface Entry {
 interface NewEntry {
   value: number;
   description: string;
+  date: string;
 }
 
 function App() {
-  const [data, setData] = useState<Entry[]>();
+  const [data, setData] = useState<Entry[]>([]);
 
   useEffect(() => {
     setData(mockData);
@@ -28,8 +28,7 @@ function App() {
       setData([
         ...data,
         {
-          id: data?.length + 1,
-          date: format(new Date(), 'yyyy-MM-dd'),
+          id: data.length + 1,
           ...newEntry,
         },
       ]);
@@ -37,18 +36,28 @@ function App() {
       setData([
         {
           id: 1,
-          date: format(new Date(), 'yyyy-MM-dd'),
           ...newEntry,
         },
       ]);
     }
   };
+
+  const addEntries = (newEntries: NewEntry[]) => {
+    setData([
+      ...data,
+      ...newEntries.map((el, index) => ({
+        ...el,
+        id: data.length + 1 + index,
+      })),
+    ]);
+  };
+
   return (
     <div
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <h1>Finances Tracker</h1>
-      <EntryForm addNewEntry={addNewEntry} />
+      <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
       <EntryList data={data} />
     </div>
   );

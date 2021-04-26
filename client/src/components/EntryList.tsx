@@ -46,12 +46,7 @@ const EntryList = (props: EntryListProps) => {
       <div>
         <button onClick={handleDecreaseMonth}>{'<'}</button>
         {format(filterDate, 'MMM, yyyy')}
-        <button
-          onClick={handleIncreaseMonth}
-          disabled={isSameMonth(filterDate, new Date())}
-        >
-          {'>'}
-        </button>
+        <button onClick={handleIncreaseMonth}>{'>'}</button>
       </div>
       <h2>Total : {monthlyTotal.toFixed(2)}</h2>
       {displayData ? (
