@@ -1,23 +1,4 @@
-type Categories =
-  | 'stocks'
-  | 'health'
-  | 'transport'
-  | 'mainSalary'
-  | 'housing'
-  | 'food'
-  | 'utilities'
-  | 'savings'
-  | 'entertainment'
-  | 'sideIncome'
-  | 'other';
-
-interface Entry {
-  id: number;
-  value: number;
-  description: string;
-  date: string;
-  category: Categories;
-}
+import { Entry } from './types';
 
 export const mockData: Entry[] = [
   {

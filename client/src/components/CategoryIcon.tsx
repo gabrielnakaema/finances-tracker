@@ -9,19 +9,7 @@ import {
   GiSuitcase,
   GiCardRandom,
 } from 'react-icons/gi';
-
-type Categories =
-  | 'stocks'
-  | 'health'
-  | 'transport'
-  | 'mainSalary'
-  | 'housing'
-  | 'food'
-  | 'utilities'
-  | 'savings'
-  | 'entertainment'
-  | 'sideIncome'
-  | 'other';
+import { Categories } from '../types';
 
 interface CategoryIconProps {
   category: Categories;

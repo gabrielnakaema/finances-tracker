@@ -4,30 +4,10 @@ import isSameMonth from 'date-fns/isSameMonth';
 import { useState, useEffect } from 'react';
 import addMonths from 'date-fns/addMonths';
 import CategoryIcon from './CategoryIcon';
-
-type Categories =
-  | 'stocks'
-  | 'health'
-  | 'transport'
-  | 'mainSalary'
-  | 'housing'
-  | 'food'
-  | 'utilities'
-  | 'savings'
-  | 'entertainment'
-  | 'sideIncome'
-  | 'other';
-
-interface Entry {
-  id: number;
-  value: number;
-  description: string;
-  date: string;
-  category: Categories;
-}
+import { Entry } from '../types';
 
 interface EntryListProps {
-  data?: Entry[];
+  data: Entry[];
 }
 
 const EntryList = (props: EntryListProps) => {

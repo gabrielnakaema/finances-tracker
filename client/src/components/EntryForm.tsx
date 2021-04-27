@@ -1,26 +1,7 @@
 import React, { useState } from 'react';
 import format from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
-
-type Categories =
-  | 'stocks'
-  | 'health'
-  | 'transport'
-  | 'mainSalary'
-  | 'housing'
-  | 'food'
-  | 'utilities'
-  | 'savings'
-  | 'entertainment'
-  | 'sideIncome'
-  | 'other';
-
-interface NewEntry {
-  value: number;
-  description: string;
-  date: string;
-  category: Categories;
-}
+import { NewEntry, Categories } from '../types';
 
 interface EntryFormProps {
   addNewEntry: (newEntry: NewEntry) => void;
