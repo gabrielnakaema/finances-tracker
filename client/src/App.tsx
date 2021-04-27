@@ -3,17 +3,32 @@ import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
 
+type Categories =
+  | 'stocks'
+  | 'health'
+  | 'transport'
+  | 'mainSalary'
+  | 'housing'
+  | 'food'
+  | 'utilities'
+  | 'savings'
+  | 'entertainment'
+  | 'sideIncome'
+  | 'other';
+
 interface Entry {
   id: number;
   value: number;
   description: string;
   date: string;
+  category: Categories;
 }
 
 interface NewEntry {
   value: number;
   description: string;
   date: string;
+  category: Categories;
 }
 
 function App() {
