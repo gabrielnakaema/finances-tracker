@@ -1,10 +1,25 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import format from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
+
+type Categories =
+  | 'stocks'
+  | 'health'
+  | 'transport'
+  | 'mainSalary'
+  | 'housing'
+  | 'food'
+  | 'utilities'
+  | 'savings'
+  | 'entertainment'
+  | 'sideIncome'
+  | 'other';
+
 interface NewEntry {
   value: number;
   description: string;
   date: string;
+  category: Categories;
 }
 
 interface EntryFormProps {
@@ -18,12 +33,19 @@ const EntryForm = (props: EntryFormProps) => {
   const [isExpense, setIsExpense] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurringMonths, setRecurringMonths] = useState(0);
+  const [category, setCategory] = useState<Categories>('other');
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const category = e.target.value as Categories;
+    setCategory(category);
+  };
 
   const handleSubmit = () => {
-    const newEntry = {
+    const newEntry: NewEntry = {
       value: isExpense ? -1.0 * Number(value) : Number(value),
       description,
       date: format(new Date(), 'yyyy-MM-dd'),
+      category,
     };
 
     if (isRecurring && recurringMonths > 0) {
@@ -106,6 +128,26 @@ const EntryForm = (props: EntryFormProps) => {
           setDescription(e.target.value);
         }}
       />
+      <label>Category</label>
+      {isExpense ? (
+        <select value={category} onChange={handleCategoryChange}>
+          <option value="entertainment">Entertainment</option>
+          <option value="food">Food</option>
+          <option value="health">Health</option>
+          <option value="housing">Housing</option>
+          <option value="savings">Savings</option>
+          <option value="transport">Transport</option>
+          <option value="utilities">Utilities</option>
+          <option value="other">Other</option>
+        </select>
+      ) : (
+        <select value={category} onChange={handleCategoryChange}>
+          <option value="mainSalary">Salary</option>
+          <option value="sideIncome">Side Income</option>
+          <option value="stocks">Stocks</option>
+          <option value="other">Other</option>
+        </select>
+      )}
       <button onClick={handleSubmit}>Create</button>
     </>
   );

@@ -3,12 +3,27 @@ import format from 'date-fns/format';
 import isSameMonth from 'date-fns/isSameMonth';
 import { useState, useEffect } from 'react';
 import addMonths from 'date-fns/addMonths';
+import CategoryIcon from './CategoryIcon';
+
+type Categories =
+  | 'stocks'
+  | 'health'
+  | 'transport'
+  | 'mainSalary'
+  | 'housing'
+  | 'food'
+  | 'utilities'
+  | 'savings'
+  | 'entertainment'
+  | 'sideIncome'
+  | 'other';
 
 interface Entry {
   id: number;
   value: number;
   description: string;
   date: string;
+  category: Categories;
 }
 
 interface EntryListProps {
@@ -65,6 +80,8 @@ const EntryList = (props: EntryListProps) => {
             }}
             key={el.id}
           >
+            <CategoryIcon category={el.category} />
+
             {el.description}
             <br />
             {el.value.toFixed(2)}
