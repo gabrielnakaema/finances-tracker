@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
+import './App.css';
 
 function App() {
   const [data, setData] = useState<Entry[]>([]);
