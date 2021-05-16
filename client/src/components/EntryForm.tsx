@@ -21,7 +21,8 @@ const EntryForm = (props: EntryFormProps) => {
     setCategory(category);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
     const newEntry: NewEntry = {
       value: isExpense ? -1.0 * Number(value) : Number(value),
       description,
@@ -55,81 +56,92 @@ const EntryForm = (props: EntryFormProps) => {
   return (
     <>
       <h2>Add New Entry</h2>
-      <div>
-        <input
-          type="checkbox"
-          checked={isRecurring}
-          onChange={handleRecurringCheckboxChange}
-        />{' '}
-        Recurring
-      </div>
-      {isRecurring && (
-        <div>
-          Months to repeat entry:
+      <form onSubmit={handleSubmit}>
+        <div style={{ textAlign: 'center' }}>
+          <input
+            type="checkbox"
+            checked={isRecurring}
+            onChange={handleRecurringCheckboxChange}
+            style={{ margin: 'auto' }}
+          />{' '}
+          Recurring
+          {isRecurring && (
+            <div>
+              Months to repeat entry:
+              <br />
+              <input
+                type="text"
+                value={recurringMonths}
+                onChange={(e) => {
+                  setRecurringMonths(Number(e.target.value));
+                }}
+                style={{ margin: 'auto' }}
+              />{' '}
+            </div>
+          )}
+          <div>
+            <input
+              type="radio"
+              value="expense"
+              name="expense-type"
+              checked={isExpense}
+              onChange={() => setIsExpense(true)}
+            />{' '}
+            Expense
+            <input
+              type="radio"
+              value="income"
+              name="expense-type"
+              checked={!isExpense}
+              onChange={() => setIsExpense(false)}
+            />{' '}
+            Income
+          </div>
+          Value
           <br />
           <input
-            type="text"
-            value={recurringMonths}
+            value={value}
             onChange={(e) => {
-              setRecurringMonths(Number(e.target.value));
+              setValue(e.target.value);
             }}
-          />{' '}
+            style={{ margin: 'auto' }}
+          />
+          <br />
+          Description
+          <br />
+          <input
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+            style={{ margin: 'auto' }}
+          />
+          <br />
+          <label>Category</label>
+          <br />
+          {isExpense ? (
+            <select value={category} onChange={handleCategoryChange}>
+              <option value="entertainment">Entertainment</option>
+              <option value="food">Food</option>
+              <option value="health">Health</option>
+              <option value="housing">Housing</option>
+              <option value="savings">Savings</option>
+              <option value="transport">Transport</option>
+              <option value="utilities">Utilities</option>
+              <option value="other">Other</option>
+            </select>
+          ) : (
+            <select value={category} onChange={handleCategoryChange}>
+              <option value="mainSalary">Salary</option>
+              <option value="sideIncome">Side Income</option>
+              <option value="stocks">Stocks</option>
+              <option value="other">Other</option>
+            </select>
+          )}
+          <br />
+          <button type="submit">Create</button>
         </div>
-      )}
-      <div>
-        <input
-          type="radio"
-          value="expense"
-          name="expense-type"
-          checked={isExpense}
-          onChange={() => setIsExpense(true)}
-        />{' '}
-        Expense
-        <input
-          type="radio"
-          value="income"
-          name="expense-type"
-          checked={!isExpense}
-          onChange={() => setIsExpense(false)}
-        />{' '}
-        Income
-      </div>
-      <br />
-      Value
-      <input
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
-      />
-      Description
-      <input
-        value={description}
-        onChange={(e) => {
-          setDescription(e.target.value);
-        }}
-      />
-      <label>Category</label>
-      {isExpense ? (
-        <select value={category} onChange={handleCategoryChange}>
-          <option value="entertainment">Entertainment</option>
-          <option value="food">Food</option>
-          <option value="health">Health</option>
-          <option value="housing">Housing</option>
-          <option value="savings">Savings</option>
-          <option value="transport">Transport</option>
-          <option value="utilities">Utilities</option>
-          <option value="other">Other</option>
-        </select>
-      ) : (
-        <select value={category} onChange={handleCategoryChange}>
-          <option value="mainSalary">Salary</option>
-          <option value="sideIncome">Side Income</option>
-          <option value="stocks">Stocks</option>
-          <option value="other">Other</option>
-        </select>
-      )}
-      <button onClick={handleSubmit}>Create</button>
+      </form>
     </>
   );
 };
