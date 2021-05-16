@@ -40,21 +40,24 @@ const EntryForm = (props: EntryFormProps) => {
       }
     }
 
-    if (!isNumeric(value)) {
-      console.error('value input is not numeric');
+    function resetFormValues() {
       setValue('');
       setDescription('');
       setIsRecurring(false);
       setRecurringMonths(0);
+      setCategory('other');
+      setIsExpense(true);
+    }
+
+    if (!isNumeric(value)) {
+      window.alert('New entry value should be numeric');
+      resetFormValues();
       return;
     }
 
     if (isNull(description)) {
-      console.error('description should not be null');
-      setValue('');
-      setDescription('');
-      setIsRecurring(false);
-      setRecurringMonths(0);
+      window.alert('New entry description should not be empty');
+      resetFormValues();
       return;
     }
 
@@ -77,15 +80,12 @@ const EntryForm = (props: EntryFormProps) => {
         }
         props.addEntries(arrayOfNewEntries);
       } else {
-        console.log('invalid amount of recurring months');
+        window.alert('Recurring Months should be greater than zero.');
       }
     } else {
       props.addNewEntry(newEntry);
     }
-
-    setValue('');
-    setDescription('');
-    setIsExpense(true);
+    resetFormValues();
   };
 
   const handleRecurringCheckboxChange = () => {
