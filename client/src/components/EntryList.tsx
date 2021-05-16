@@ -56,6 +56,7 @@ const EntryList = (props: EntryListProps) => {
               borderWidth: '1px',
               alignItems: 'center',
             }}
+            key={el.id}
           >
             <div style={{ width: '25%', textAlign: 'center' }}>
               <CategoryIcon category={el.category} size={'2rem'} />
