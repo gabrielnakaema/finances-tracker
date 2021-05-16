@@ -23,6 +23,41 @@ const EntryForm = (props: EntryFormProps) => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
+
+    function isNumeric(value: string) {
+      if (isNaN(Number(value))) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function isNull(string: string) {
+      if (string.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    if (!isNumeric(value)) {
+      console.error('value input is not numeric');
+      setValue('');
+      setDescription('');
+      setIsRecurring(false);
+      setRecurringMonths(0);
+      return;
+    }
+
+    if (isNull(description)) {
+      console.error('description should not be null');
+      setValue('');
+      setDescription('');
+      setIsRecurring(false);
+      setRecurringMonths(0);
+      return;
+    }
+
     const newEntry: NewEntry = {
       value: isExpense ? -1.0 * Number(value) : Number(value),
       description,
@@ -30,16 +65,20 @@ const EntryForm = (props: EntryFormProps) => {
       category,
     };
 
-    if (isRecurring && recurringMonths > 0) {
-      const arrayOfNewEntries: NewEntry[] = [];
-      let i;
-      for (i = 0; i < recurringMonths; i++) {
-        arrayOfNewEntries.push({
-          ...newEntry,
-          date: format(addMonths(new Date(), i), 'yyyy-MM-dd'),
-        });
+    if (isRecurring) {
+      if (recurringMonths > 0) {
+        const arrayOfNewEntries: NewEntry[] = [];
+        let i;
+        for (i = 0; i < recurringMonths; i++) {
+          arrayOfNewEntries.push({
+            ...newEntry,
+            date: format(addMonths(new Date(), i), 'yyyy-MM-dd'),
+          });
+        }
+        props.addEntries(arrayOfNewEntries);
+      } else {
+        console.log('invalid amount of recurring months');
       }
-      props.addEntries(arrayOfNewEntries);
     } else {
       props.addNewEntry(newEntry);
     }
@@ -70,7 +109,8 @@ const EntryForm = (props: EntryFormProps) => {
               Months to repeat entry:
               <br />
               <input
-                type="text"
+                type="number"
+                min="0"
                 value={recurringMonths}
                 onChange={(e) => {
                   setRecurringMonths(Number(e.target.value));
@@ -100,6 +140,8 @@ const EntryForm = (props: EntryFormProps) => {
           Value
           <br />
           <input
+            type="number"
+            min="0"
             value={value}
             onChange={(e) => {
               setValue(e.target.value);
