@@ -40,7 +40,7 @@ const EntryList = (props: EntryListProps) => {
       <h2>Entry List</h2>
       <div>
         <button onClick={handleDecreaseMonth}>{'<'}</button>
-        {format(filterDate, 'MMM, yyyy')}
+        {format(filterDate, 'MMMM, yyyy')}
         <button onClick={handleIncreaseMonth}>{'>'}</button>
       </div>
       <h2>Total : {monthlyTotal.toFixed(2)}</h2>
@@ -48,25 +48,44 @@ const EntryList = (props: EntryListProps) => {
         displayData.map((el) => (
           <div
             style={{
-              width: '50%',
-              margin: '1rem 0',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '7rem',
+              flexDirection: 'row',
+              height: '5rem',
+              width: '70%',
               borderStyle: 'solid',
               borderWidth: '1px',
-              <CategoryIcon category={el.category} size={'2rem'} />
+              alignItems: 'center',
             }}
-            key={el.id}
           >
-            <CategoryIcon category={el.category} />
-
-            {el.description}
-            <br />
-            {el.value.toFixed(2)}
-            <br />
-            {format(parseISO(el.date), 'MMM dd, yyyy')}
+            <div style={{ width: '25%', textAlign: 'center' }}>
+              <CategoryIcon category={el.category} size={'2rem'} />
+            </div>
+            <div
+              style={{
+                flex: 1,
+                flexGrow: 1,
+                flexDirection: 'row',
+                marginRight: '1rem',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              <span
+                style={{
+                  maxWidth: '70%',
+                  marginLeft: 'auto',
+                }}
+              >
+                {el.description}
+              </span>
+              <div>
+                <span>{el.value}</span>
+                <span style={{ float: 'right' }}>
+                  {format(parseISO(el.date), 'MMM dd')}
+                </span>
+              </div>
+            </div>
           </div>
         ))
       ) : (
