@@ -13,23 +13,24 @@ import { Categories } from '../types';
 
 interface CategoryIconProps {
   category: Categories;
+  size: string;
 }
 
 type CategoryComponentMatch = { [key in Categories]: JSX.Element };
 
 const CategoryIcon = (props: CategoryIconProps) => {
   const categoryComponent: CategoryComponentMatch = {
-    stocks: <GoGraph size={'2rem'} />,
-    health: <GiHospitalCross size={'2rem'} color={'red'} />,
-    transport: <BiBus size={'2rem'} />,
-    mainSalary: <GiSuitcase size={'2rem'} />,
-    housing: <BiBuildingHouse size={'2rem'} />,
-    food: <GiSlicedBread size={'2rem'} />,
-    utilities: <FaBolt size={'2rem'} />,
-    savings: <GrMoney size={'2rem'} />,
-    entertainment: <GiPopcorn size={'2rem'} />,
-    sideIncome: <FaMoneyBill size={'2rem'} />,
-    other: <GiCardRandom size={'2rem'} />,
+    stocks: <GoGraph size={props.size} />,
+    health: <GiHospitalCross size={props.size} color={'red'} />,
+    transport: <BiBus size={props.size} />,
+    mainSalary: <GiSuitcase size={props.size} />,
+    housing: <BiBuildingHouse size={props.size} />,
+    food: <GiSlicedBread size={props.size} />,
+    utilities: <FaBolt size={props.size} />,
+    savings: <GrMoney size={props.size} />,
+    entertainment: <GiPopcorn size={props.size} />,
+    sideIncome: <FaMoneyBill size={props.size} />,
+    other: <GiCardRandom size={props.size} />,
   };
   return categoryComponent[props.category];
 };
