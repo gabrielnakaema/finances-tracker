@@ -80,7 +80,7 @@ const EntryList = (props: EntryListProps) => {
                 {el.description}
               </span>
               <div>
-                <span>{el.value}</span>
+                <span>{el.value.toFixed(2).toString()}</span>
                 <span style={{ float: 'right' }}>
                   {format(parseISO(el.date), 'MMM dd')}
                 </span>
