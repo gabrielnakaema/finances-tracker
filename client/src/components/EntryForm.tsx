@@ -92,6 +92,20 @@ const EntryForm = (props: EntryFormProps) => {
     setIsRecurring(!isRecurring);
   };
 
+  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(e.target.value);
+  };
+
+  const handleRecurringMonthsChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRecurringMonths(e.target.value);
+  };
+
   return (
     <>
       <h2>Add New Entry</h2>
@@ -116,7 +130,7 @@ const EntryForm = (props: EntryFormProps) => {
                 type="number"
                 min="0"
                 value={recurringMonths}
-                onChange={(e) => {setRecurringMonths(e.target.value)}}
+                onChange={handleRecurringMonthsChange}
                 style={{ margin: 'auto' }}
               />{' '}
             </div>
@@ -148,9 +162,7 @@ const EntryForm = (props: EntryFormProps) => {
             type="number"
             min="0"
             value={value}
-            onChange={(e) => {
-              setValue(e.target.value);
-            }}
+            onChange={handleValueChange}
             style={{ margin: 'auto' }}
           />
           <br />
@@ -159,9 +171,7 @@ const EntryForm = (props: EntryFormProps) => {
           <input
             id="description-input"
             value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
+            onChange={handleDescriptionChange}
             style={{ margin: 'auto' }}
           />
           <br />
