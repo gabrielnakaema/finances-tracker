@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import format from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
 import { NewEntry, Categories } from '../types';
+import TextInput from './TextInput';
 
 interface EntryFormProps {
   addNewEntry: (newEntry: NewEntry) => void;
@@ -13,7 +14,7 @@ const EntryForm = (props: EntryFormProps) => {
   const [description, setDescription] = useState('');
   const [isExpense, setIsExpense] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [recurringMonths, setRecurringMonths] = useState(0);
+  const [recurringMonths, setRecurringMonths] = useState('');
   const [category, setCategory] = useState<Categories>('other');
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -44,7 +45,7 @@ const EntryForm = (props: EntryFormProps) => {
       setValue('');
       setDescription('');
       setIsRecurring(false);
-      setRecurringMonths(0);
+      setRecurringMonths('');
       setCategory('other');
       setIsExpense(true);
     }
@@ -69,10 +70,10 @@ const EntryForm = (props: EntryFormProps) => {
     };
 
     if (isRecurring) {
-      if (recurringMonths > 0) {
+      if (Number(recurringMonths) > 0) {
         const arrayOfNewEntries: NewEntry[] = [];
         let i;
-        for (i = 0; i < recurringMonths; i++) {
+        for (i = 0; i < Number(recurringMonths); i++) {
           arrayOfNewEntries.push({
             ...newEntry,
             date: format(addMonths(new Date(), i), 'yyyy-MM-dd'),
@@ -92,6 +93,20 @@ const EntryForm = (props: EntryFormProps) => {
     setIsRecurring(!isRecurring);
   };
 
+  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(e.target.value);
+  };
+
+  const handleRecurringMonthsChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRecurringMonths(e.target.value);
+  };
+
   return (
     <>
       <h2>Add New Entry</h2>
@@ -106,22 +121,15 @@ const EntryForm = (props: EntryFormProps) => {
           />{' '}
           <label htmlFor="recurring-checkbox">Recurring</label>
           {isRecurring && (
-            <div>
-              <label htmlFor="recurring-months-input">
-                Months to repeat entry:
-              </label>
-              <br />
-              <input
-                id="recurring-months-input"
-                type="number"
-                min="0"
-                value={recurringMonths}
-                onChange={(e) => {
-                  setRecurringMonths(Number(e.target.value));
-                }}
-                style={{ margin: 'auto' }}
-              />{' '}
-            </div>
+            <TextInput
+              value={recurringMonths}
+              onChange={handleRecurringMonthsChange}
+              type="number"
+              min="0"
+              inputId="recurring-months-input"
+              inputStyle={{ margin: 'auto' }}
+              labelText="Months to repeat entry:"
+            />
           )}
           <div>
             <input
@@ -143,28 +151,22 @@ const EntryForm = (props: EntryFormProps) => {
             />{' '}
             <label htmlFor="income-radio">Income</label>
           </div>
-          <label htmlFor="value-input">Value</label>
-          <br />
-          <input
-            id="value-input"
+          <TextInput
+            value={value}
+            onChange={handleValueChange}
             type="number"
             min="0"
-            value={value}
-            onChange={(e) => {
-              setValue(e.target.value);
-            }}
-            style={{ margin: 'auto' }}
+            inputId="value-input"
+            inputStyle={{ margin: 'auto' }}
+            labelText="Value"
           />
-          <br />
-          <label htmlFor="description-input">Description</label>
-          <br />
-          <input
-            id="description-input"
+          <TextInput
             value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-            style={{ margin: 'auto' }}
+            onChange={handleDescriptionChange}
+            type="text"
+            inputId="description-input"
+            inputStyle={{ margin: 'auto' }}
+            labelText="Description"
           />
           <br />
           <label htmlFor="category-select">Category</label>
