@@ -13,7 +13,7 @@ const EntryForm = (props: EntryFormProps) => {
   const [description, setDescription] = useState('');
   const [isExpense, setIsExpense] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [recurringMonths, setRecurringMonths] = useState(0);
+  const [recurringMonths, setRecurringMonths] = useState('');
   const [category, setCategory] = useState<Categories>('other');
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -44,7 +44,7 @@ const EntryForm = (props: EntryFormProps) => {
       setValue('');
       setDescription('');
       setIsRecurring(false);
-      setRecurringMonths(0);
+      setRecurringMonths('');
       setCategory('other');
       setIsExpense(true);
     }
@@ -69,10 +69,10 @@ const EntryForm = (props: EntryFormProps) => {
     };
 
     if (isRecurring) {
-      if (recurringMonths > 0) {
+      if (Number(recurringMonths) > 0) {
         const arrayOfNewEntries: NewEntry[] = [];
         let i;
-        for (i = 0; i < recurringMonths; i++) {
+        for (i = 0; i < Number(recurringMonths); i++) {
           arrayOfNewEntries.push({
             ...newEntry,
             date: format(addMonths(new Date(), i), 'yyyy-MM-dd'),
@@ -116,9 +116,7 @@ const EntryForm = (props: EntryFormProps) => {
                 type="number"
                 min="0"
                 value={recurringMonths}
-                onChange={(e) => {
-                  setRecurringMonths(Number(e.target.value));
-                }}
+                onChange={(e) => {setRecurringMonths(e.target.value)}}
                 style={{ margin: 'auto' }}
               />{' '}
             </div>
