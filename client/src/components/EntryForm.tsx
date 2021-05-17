@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import format from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
 import { NewEntry, Categories } from '../types';
+import TextInput from './TextInput';
 
 interface EntryFormProps {
   addNewEntry: (newEntry: NewEntry) => void;
@@ -120,20 +121,15 @@ const EntryForm = (props: EntryFormProps) => {
           />{' '}
           <label htmlFor="recurring-checkbox">Recurring</label>
           {isRecurring && (
-            <div>
-              <label htmlFor="recurring-months-input">
-                Months to repeat entry:
-              </label>
-              <br />
-              <input
-                id="recurring-months-input"
-                type="number"
-                min="0"
-                value={recurringMonths}
-                onChange={handleRecurringMonthsChange}
-                style={{ margin: 'auto' }}
-              />{' '}
-            </div>
+            <TextInput
+              value={recurringMonths}
+              onChange={handleRecurringMonthsChange}
+              type="number"
+              min="0"
+              inputId="recurring-months-input"
+              inputStyle={{ margin: 'auto' }}
+              labelText="Months to repeat entry:"
+            />
           )}
           <div>
             <input
@@ -155,24 +151,22 @@ const EntryForm = (props: EntryFormProps) => {
             />{' '}
             <label htmlFor="income-radio">Income</label>
           </div>
-          <label htmlFor="value-input">Value</label>
-          <br />
-          <input
-            id="value-input"
-            type="number"
-            min="0"
+          <TextInput
             value={value}
             onChange={handleValueChange}
-            style={{ margin: 'auto' }}
+            type="number"
+            min="0"
+            inputId="value-input"
+            inputStyle={{ margin: 'auto' }}
+            labelText="Value"
           />
-          <br />
-          <label htmlFor="description-input">Description</label>
-          <br />
-          <input
-            id="description-input"
+          <TextInput
             value={description}
             onChange={handleDescriptionChange}
-            style={{ margin: 'auto' }}
+            type="text"
+            inputId="description-input"
+            inputStyle={{ margin: 'auto' }}
+            labelText="Description"
           />
           <br />
           <label htmlFor="category-select">Category</label>
