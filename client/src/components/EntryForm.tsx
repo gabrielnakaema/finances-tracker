@@ -23,6 +23,44 @@ const EntryForm = (props: EntryFormProps) => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
+
+    function isNumeric(value: string) {
+      if (isNaN(Number(value))) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function isNull(string: string) {
+      if (string.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function resetFormValues() {
+      setValue('');
+      setDescription('');
+      setIsRecurring(false);
+      setRecurringMonths(0);
+      setCategory('other');
+      setIsExpense(true);
+    }
+
+    if (!isNumeric(value)) {
+      window.alert('New entry value should be numeric');
+      resetFormValues();
+      return;
+    }
+
+    if (isNull(description)) {
+      window.alert('New entry description should not be empty');
+      resetFormValues();
+      return;
+    }
+
     const newEntry: NewEntry = {
       value: isExpense ? -1.0 * Number(value) : Number(value),
       description,
@@ -30,23 +68,24 @@ const EntryForm = (props: EntryFormProps) => {
       category,
     };
 
-    if (isRecurring && recurringMonths > 0) {
-      const arrayOfNewEntries: NewEntry[] = [];
-      let i;
-      for (i = 0; i < recurringMonths; i++) {
-        arrayOfNewEntries.push({
-          ...newEntry,
-          date: format(addMonths(new Date(), i), 'yyyy-MM-dd'),
-        });
+    if (isRecurring) {
+      if (recurringMonths > 0) {
+        const arrayOfNewEntries: NewEntry[] = [];
+        let i;
+        for (i = 0; i < recurringMonths; i++) {
+          arrayOfNewEntries.push({
+            ...newEntry,
+            date: format(addMonths(new Date(), i), 'yyyy-MM-dd'),
+          });
+        }
+        props.addEntries(arrayOfNewEntries);
+      } else {
+        window.alert('Recurring Months should be greater than zero.');
       }
-      props.addEntries(arrayOfNewEntries);
     } else {
       props.addNewEntry(newEntry);
     }
-
-    setValue('');
-    setDescription('');
-    setIsExpense(true);
+    resetFormValues();
   };
 
   const handleRecurringCheckboxChange = () => {
@@ -59,18 +98,23 @@ const EntryForm = (props: EntryFormProps) => {
       <form onSubmit={handleSubmit}>
         <div style={{ textAlign: 'center' }}>
           <input
+            id="recurring-checkbox"
             type="checkbox"
             checked={isRecurring}
             onChange={handleRecurringCheckboxChange}
             style={{ margin: 'auto' }}
           />{' '}
-          Recurring
+          <label htmlFor="recurring-checkbox">Recurring</label>
           {isRecurring && (
             <div>
-              Months to repeat entry:
+              <label htmlFor="recurring-months-input">
+                Months to repeat entry:
+              </label>
               <br />
               <input
-                type="text"
+                id="recurring-months-input"
+                type="number"
+                min="0"
                 value={recurringMonths}
                 onChange={(e) => {
                   setRecurringMonths(Number(e.target.value));
@@ -81,25 +125,30 @@ const EntryForm = (props: EntryFormProps) => {
           )}
           <div>
             <input
+              id="expense-radio"
               type="radio"
               value="expense"
               name="expense-type"
               checked={isExpense}
               onChange={() => setIsExpense(true)}
             />{' '}
-            Expense
+            <label htmlFor="expense-radio">Expense</label>
             <input
+              id="income-radio"
               type="radio"
               value="income"
               name="expense-type"
               checked={!isExpense}
               onChange={() => setIsExpense(false)}
             />{' '}
-            Income
+            <label htmlFor="income-radio">Income</label>
           </div>
-          Value
+          <label htmlFor="value-input">Value</label>
           <br />
           <input
+            id="value-input"
+            type="number"
+            min="0"
             value={value}
             onChange={(e) => {
               setValue(e.target.value);
@@ -107,9 +156,10 @@ const EntryForm = (props: EntryFormProps) => {
             style={{ margin: 'auto' }}
           />
           <br />
-          Description
+          <label htmlFor="description-input">Description</label>
           <br />
           <input
+            id="description-input"
             value={description}
             onChange={(e) => {
               setDescription(e.target.value);
@@ -117,10 +167,14 @@ const EntryForm = (props: EntryFormProps) => {
             style={{ margin: 'auto' }}
           />
           <br />
-          <label>Category</label>
+          <label htmlFor="category-select">Category</label>
           <br />
           {isExpense ? (
-            <select value={category} onChange={handleCategoryChange}>
+            <select
+              id="category-select"
+              value={category}
+              onChange={handleCategoryChange}
+            >
               <option value="entertainment">Entertainment</option>
               <option value="food">Food</option>
               <option value="health">Health</option>
@@ -139,7 +193,12 @@ const EntryForm = (props: EntryFormProps) => {
             </select>
           )}
           <br />
-          <button type="submit">Create</button>
+          <label htmlFor="create-button" style={{ display: 'none' }}>
+            Create Entry
+          </label>
+          <button id="create-button" type="submit">
+            Create
+          </button>
         </div>
       </form>
     </>
