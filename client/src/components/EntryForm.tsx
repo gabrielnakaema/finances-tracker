@@ -98,17 +98,21 @@ const EntryForm = (props: EntryFormProps) => {
       <form onSubmit={handleSubmit}>
         <div style={{ textAlign: 'center' }}>
           <input
+            id="recurring-checkbox"
             type="checkbox"
             checked={isRecurring}
             onChange={handleRecurringCheckboxChange}
             style={{ margin: 'auto' }}
           />{' '}
-          Recurring
+          <label htmlFor="recurring-checkbox">Recurring</label>
           {isRecurring && (
             <div>
-              Months to repeat entry:
+              <label htmlFor="recurring-months-input">
+                Months to repeat entry:
+              </label>
               <br />
               <input
+                id="recurring-months-input"
                 type="number"
                 min="0"
                 value={recurringMonths}
@@ -121,25 +125,28 @@ const EntryForm = (props: EntryFormProps) => {
           )}
           <div>
             <input
+              id="expense-radio"
               type="radio"
               value="expense"
               name="expense-type"
               checked={isExpense}
               onChange={() => setIsExpense(true)}
             />{' '}
-            Expense
+            <label htmlFor="expense-radio">Expense</label>
             <input
+              id="income-radio"
               type="radio"
               value="income"
               name="expense-type"
               checked={!isExpense}
               onChange={() => setIsExpense(false)}
             />{' '}
-            Income
+            <label htmlFor="income-radio">Income</label>
           </div>
-          Value
+          <label htmlFor="value-input">Value</label>
           <br />
           <input
+            id="value-input"
             type="number"
             min="0"
             value={value}
@@ -149,9 +156,10 @@ const EntryForm = (props: EntryFormProps) => {
             style={{ margin: 'auto' }}
           />
           <br />
-          Description
+          <label htmlFor="description-input">Description</label>
           <br />
           <input
+            id="description-input"
             value={description}
             onChange={(e) => {
               setDescription(e.target.value);
@@ -159,10 +167,14 @@ const EntryForm = (props: EntryFormProps) => {
             style={{ margin: 'auto' }}
           />
           <br />
-          <label>Category</label>
+          <label htmlFor="category-select">Category</label>
           <br />
           {isExpense ? (
-            <select value={category} onChange={handleCategoryChange}>
+            <select
+              id="category-select"
+              value={category}
+              onChange={handleCategoryChange}
+            >
               <option value="entertainment">Entertainment</option>
               <option value="food">Food</option>
               <option value="health">Health</option>
@@ -181,7 +193,12 @@ const EntryForm = (props: EntryFormProps) => {
             </select>
           )}
           <br />
-          <button type="submit">Create</button>
+          <label htmlFor="create-button" style={{ display: 'none' }}>
+            Create Entry
+          </label>
+          <button id="create-button" type="submit">
+            Create
+          </button>
         </div>
       </form>
     </>
