@@ -81,7 +81,30 @@ const EntryList = (props: EntryListProps) => {
                 {el.description}
               </span>
               <div>
-                <span>{el.value.toFixed(2).toString()}</span>
+                {el.value > 0 ? (
+                  <span
+                    style={{
+                      color: '#fff',
+                      backgroundColor: 'green',
+                      padding: '0 1rem',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    {el.value.toFixed(2).toString()}
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      color: '#fff',
+                      backgroundColor: 'red',
+                      padding: '0 1rem',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    {(el.value * -1).toFixed(2).toString()}
+                  </span>
+                )}
+
                 <span style={{ float: 'right' }}>
                   {format(parseISO(el.date), 'MMM dd')}
                 </span>
