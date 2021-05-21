@@ -187,7 +187,11 @@ const EntryForm = (props: EntryFormProps) => {
               <option value="other">Other</option>
             </select>
           ) : (
-            <select value={category} onChange={handleCategoryChange}>
+            <select
+              id="category-select"
+              value={category}
+              onChange={handleCategoryChange}
+            >
               <option value="mainSalary">Salary</option>
               <option value="sideIncome">Side Income</option>
               <option value="stocks">Stocks</option>
