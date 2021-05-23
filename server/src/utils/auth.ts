@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
   if (req.body.username === 'test' && req.body.password === '12345') {
@@ -12,4 +13,10 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     }
   }
   res.status(401).json({ message: 'authentication failed' });
+};
+
+export const hashPassword = async (textPassword: string) => {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(textPassword, saltRounds);
+  return hashedPassword;
 };
