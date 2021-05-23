@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { entriesRouter } from './routes/entries';
 import { login } from './utils/auth';
+import { create } from './controllers/user';
 
 dotenv.config();
 if (
@@ -32,6 +33,8 @@ app.use(express.json());
 app.use('/entries', entriesRouter);
 
 app.post('/login', login);
+
+app.post('/register', create);
 
 app.get('/', (req, res) => {
   res.send({ message: 'hello world!' });
