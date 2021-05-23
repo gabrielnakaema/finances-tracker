@@ -1,7 +1,9 @@
 import { Router } from 'express';
+import { authorizeUser } from '../utils/middleware';
+import { entryController } from '../controllers/entry';
 
 export const entriesRouter = Router();
 
-entriesRouter.get('/', (req, res) => {
-  res.send('entries router');
-});
+entriesRouter.use(authorizeUser);
+
+entriesRouter.get('/', entryController.getAll);
