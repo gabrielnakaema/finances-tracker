@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { entriesRouter } from './routes/entries';
+import { login } from './utils/auth';
 
 dotenv.config();
 
@@ -20,6 +21,8 @@ db.once('open', () => {
 const app = express();
 
 app.use('/entries', entriesRouter);
+
+app.post('/login', login);
 
 app.get('/', (req, res) => {
   res.send({ message: 'hello world!' });
