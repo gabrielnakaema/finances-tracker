@@ -1,9 +1,14 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Entry } from '../models/entry';
 import { RequestWithUserId } from '../utils/middleware';
 
-const getAll = (req: Request, res: Response) => {
-  res.send({ message: 'entries getAll controller' });
+const getAll = async (req: RequestWithUserId, res: Response) => {
+  if (!req.authorizedUserId) {
+    return res.status(500).send({ message: 'internal server error' });
+  }
+  const authorizedUserId = req.authorizedUserId;
+  const entries = await Entry.find({ createdBy: authorizedUserId });
+  res.status(200).send(entries);
 };
 
 const getOne = () => {};
