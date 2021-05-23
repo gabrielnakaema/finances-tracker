@@ -11,9 +11,6 @@ const entrySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    date: {
-      type: Date,
-    },
     type: {
       type: String,
       required: true,
