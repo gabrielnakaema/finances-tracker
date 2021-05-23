@@ -14,6 +14,10 @@ export const authorizeUser = (
   res: Response,
   next: NextFunction
 ) => {
+  if (!process.env.SECRET) {
+    return res.status(500).send({ message: 'internal server error' });
+  }
+
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -35,14 +39,13 @@ export const authorizeUser = (
   }
 
   const token = split[1];
-  if (process.env.SECRET) {
-    jwt.verify(token, process.env.SECRET, (error, decoded) => {
-      if (error) {
-        return res.status(500).send({ message: 'failed to authenticate' });
-      }
-      const decodedInfo = decoded as DecodedObject;
-      req.authorizedUserId = decodedInfo.userId;
-      next();
-    });
-  }
+
+  jwt.verify(token, process.env.SECRET, (error, decoded) => {
+    if (error) {
+      return res.status(500).send({ message: 'failed to authenticate' });
+    }
+    const decodedInfo = decoded as DecodedObject;
+    req.authorizedUserId = decodedInfo.userId;
+    next();
+  });
 };
