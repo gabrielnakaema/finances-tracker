@@ -1,6 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const entrySchema = new mongoose.Schema(
+export interface IEntry extends Document {
+  description: string;
+  value: number;
+  type: string;
+  category: string;
+  createdBy: mongoose.Types.ObjectId;
+}
+
+const entrySchema: Schema = new mongoose.Schema(
   {
     description: {
       type: String,
@@ -28,4 +36,4 @@ const entrySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Entry = mongoose.model('entry', entrySchema);
+export const Entry = mongoose.model<IEntry>('entry', entrySchema);
