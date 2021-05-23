@@ -7,3 +7,5 @@ export const entriesRouter = Router();
 entriesRouter.use(authorizeUser);
 
 entriesRouter.get('/', entryController.getAll);
+
+entriesRouter.post('/', entryController.create);
