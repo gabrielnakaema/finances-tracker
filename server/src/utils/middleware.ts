@@ -42,10 +42,21 @@ export const authorizeUser = (
 
   jwt.verify(token, process.env.SECRET, (error, decoded) => {
     if (error) {
-      return res.status(500).send({ message: 'failed to authenticate' });
+      return res.status(401).send({ message: 'failed to authenticate' });
     }
     const decodedInfo = decoded as DecodedObject;
     req.authorizedUserId = decodedInfo.userId;
     next();
   });
+};
+
+export const checkRequestUserId = (
+  req: RequestWithUserId,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.authorizedUserId) {
+    return res.status(500).send({ message: 'internal server error' });
+  }
+  next();
 };

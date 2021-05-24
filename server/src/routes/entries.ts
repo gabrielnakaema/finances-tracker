@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { authorizeUser } from '../utils/middleware';
+import { authorizeUser, checkRequestUserId } from '../utils/middleware';
 import { entryController } from '../controllers/entry';
 
 export const entriesRouter = Router();
 
 entriesRouter.use(authorizeUser);
+
+entriesRouter.use(checkRequestUserId);
 
 entriesRouter.get('/', entryController.getAll);
 
