@@ -13,10 +13,13 @@ function App() {
 
   useEffect(() => {
     if (!token) {
-      const cachedToken = loginWithCache();
-      if (cachedToken) {
-        setToken(cachedToken);
-      }
+      const login = async () => {
+        const cachedToken = await loginWithCache();
+        if (cachedToken) {
+          setToken(cachedToken);
+        }
+      };
+      login();
     }
   }, [token]);
 
