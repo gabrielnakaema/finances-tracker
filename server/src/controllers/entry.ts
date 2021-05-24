@@ -52,7 +52,42 @@ const create = async (
   }
 };
 
-const update = () => {};
+const update = async (
+  req: RequestWithUserId,
+  res: Response
+): Promise<Response | void> => {
+  const requiredFields = ['description', 'value', 'type', 'category'];
+  for (const field of requiredFields) {
+    if (!req.body[field]) {
+      return res.status(400).send({ message: `missing param: ${field}` });
+    }
+  }
+  if (!req.params.id) {
+    return res.status(400).send({ message: 'missing route param: id' });
+  }
+  const authorizedUserId = req.authorizedUserId;
+
+  const foundEntry = await Entry.findOne({
+    _id: req.params.id,
+    createdBy: authorizedUserId,
+  });
+
+  if (foundEntry) {
+    const { description, value, type, category } = req.body;
+    foundEntry.description = description;
+    foundEntry.value = value;
+    foundEntry.type = type;
+    foundEntry.category = category;
+    const updatedEntry = await foundEntry.save();
+    if (updatedEntry) {
+      res.send(updatedEntry);
+    } else {
+      return res.status(500).send({ message: 'could not update entry' });
+    }
+  } else {
+    return res.status(400).send({ message: 'invalid entry id' });
+  }
+};
 
 const remove = () => {};
 
