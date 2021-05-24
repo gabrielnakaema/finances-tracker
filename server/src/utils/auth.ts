@@ -21,3 +21,19 @@ export const signToken = (userId: string): string | void => {
     return token;
   }
 };
+
+export const validateToken = (tokenToValidate: string): boolean => {
+  if (!tokenToValidate) {
+    return false;
+  }
+  try {
+    const decoded = jwt.decode(tokenToValidate);
+    if (decoded) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+};
