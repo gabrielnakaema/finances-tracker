@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 import { User } from '../models/user';
 import { hashPassword } from '../utils/auth';
 
-const getOne = () => {};
-
-export const create = async (req: Request, res: Response) => {
+export const create = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   const requiredFields = ['username', 'password', 'name'];
   for (const field of requiredFields) {
     if (!req.body[field]) {
@@ -24,7 +25,3 @@ export const create = async (req: Request, res: Response) => {
     res.status(500).send({ message: 'Error while creating new User' });
   }
 };
-
-const update = () => {};
-
-const remove = () => {};
