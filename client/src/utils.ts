@@ -18,7 +18,19 @@ export const login = async (
   }
 };
 
-export const loginWithCache = () => {
+export const loginWithCache = async () => {
   const cachedToken = window.localStorage.getItem('userToken');
-  return cachedToken;
+  const response = await axios.post(
+    `http://${apiBaseUrl}:${apiPort}/validatetoken`,
+    {
+      token: cachedToken,
+    }
+  );
+  if (response.status === 200) {
+    if (cachedToken) {
+      return cachedToken;
+    }
+  } else {
+    return;
+  }
 };
