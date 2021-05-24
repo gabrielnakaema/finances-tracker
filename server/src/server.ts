@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { entriesRouter } from './routes/entries';
 import { login } from './controllers/login';
+import { validateToken } from './utils/auth';
 import { create } from './controllers/user';
 import cors from 'cors';
 
@@ -38,6 +39,17 @@ app.use('/entries', entriesRouter);
 app.post('/login', login);
 
 app.post('/register', create);
+
+app.post('/validatetoken', (req, res) => {
+  if (!req.body.token) {
+    res.status(400).send({ message: 'token missing' });
+  }
+  if (validateToken(req.body.token)) {
+    res.status(200).send({ message: 'valid token' });
+  } else {
+    res.status(400).send({ message: 'invalid token' });
+  }
+});
 
 export const start = (): void => {
   app.listen(3333, () => {
