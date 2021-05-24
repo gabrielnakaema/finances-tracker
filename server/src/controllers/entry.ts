@@ -80,7 +80,7 @@ const update = async (
     foundEntry.category = category;
     const updatedEntry = await foundEntry.save();
     if (updatedEntry) {
-      res.send(updatedEntry);
+      res.status(200).send(updatedEntry);
     } else {
       return res.status(500).send({ message: 'could not update entry' });
     }
@@ -89,7 +89,25 @@ const update = async (
   }
 };
 
-const remove = () => {};
+const remove = async (
+  req: RequestWithUserId,
+  res: Response
+): Promise<Response | void> => {
+  if (!req.params.id) {
+    return res.status(400).send({ message: 'missing route param: id' });
+  }
+  const authorizedUserId = req.authorizedUserId;
+
+  const deletedEntry = await Entry.findOneAndDelete({
+    _id: req.params.id,
+    createdBy: authorizedUserId,
+  });
+  if (deletedEntry) {
+    res.status(200).send({ message: 'successfully deleted entry' });
+  } else {
+    return res.status(500).send({ message: 'could not delete entry' });
+  }
+};
 
 export const entryController = {
   getAll,

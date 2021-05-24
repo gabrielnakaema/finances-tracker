@@ -11,7 +11,8 @@ entriesRouter.use(checkRequestUserId);
 entriesRouter
   .route('/:id')
   .get(entryController.getOne)
-  .put(entryController.update);
+  .put(entryController.update)
+  .delete(entryController.remove);
 
 entriesRouter
   .route('/')
