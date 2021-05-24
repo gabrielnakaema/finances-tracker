@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { entriesRouter } from './routes/entries';
-import { login } from './utils/auth';
+import { login } from './controllers/login';
 import { create } from './controllers/user';
 import cors from 'cors';
 
