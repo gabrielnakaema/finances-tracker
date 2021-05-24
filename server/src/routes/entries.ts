@@ -8,6 +8,8 @@ entriesRouter.use(authorizeUser);
 
 entriesRouter.use(checkRequestUserId);
 
+entriesRouter.get('/:id', entryController.getOne);
+
 entriesRouter.get('/', entryController.getAll);
 
 entriesRouter.post('/', entryController.create);
