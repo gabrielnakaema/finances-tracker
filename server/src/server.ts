@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { entriesRouter } from './routes/entries';
 import { login } from './utils/auth';
 import { create } from './controllers/user';
+import cors from 'cors';
 
 dotenv.config();
 if (
@@ -28,6 +29,8 @@ if (
 
 const app = express();
 
+app.use(cors());
+
 app.use(express.json());
 
 app.use('/entries', entriesRouter);
@@ -36,11 +39,7 @@ app.post('/login', login);
 
 app.post('/register', create);
 
-app.get('/', (req, res) => {
-  res.send({ message: 'hello world!' });
-});
-
-export const start = () => {
+export const start = (): void => {
   app.listen(3333, () => {
     console.log('app running on port 3333');
   });
