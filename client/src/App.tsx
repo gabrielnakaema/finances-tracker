@@ -3,14 +3,38 @@ import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
+import { login, loginWithCache } from './utils';
 import './App.css';
+import LoginForm from './components/LoginForm';
 
 function App() {
   const [data, setData] = useState<Entry[]>([]);
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    if (!token) {
+      const cachedToken = loginWithCache();
+      if (cachedToken) {
+        setToken(cachedToken);
+      }
+    }
+  }, [token]);
 
   useEffect(() => {
     setData(mockData);
   }, []);
+
+  const handleLogin = async (username: string, password: string) => {
+    try {
+      const receivedToken = await login(username, password);
+      if (receivedToken) {
+        window.localStorage.setItem('userToken', receivedToken);
+        setToken(receivedToken);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const addNewEntry = (newEntry: NewEntry) => {
     if (data) {
@@ -45,6 +69,7 @@ function App() {
     <div
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
+      {token ? <h1>Logged In</h1> : <LoginForm handleLogin={handleLogin} />}
       <h1>Finances Tracker</h1>
       <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
       <EntryList data={data} />
