@@ -13,7 +13,7 @@ export const authorizeUser = (
   req: RequestWithUserId,
   res: Response,
   next: NextFunction
-) => {
+): Response | void => {
   if (!process.env.SECRET) {
     return res.status(500).send({ message: 'internal server error' });
   }
@@ -54,7 +54,7 @@ export const checkRequestUserId = (
   req: RequestWithUserId,
   res: Response,
   next: NextFunction
-) => {
+): Response | void => {
   if (!req.authorizedUserId) {
     return res.status(500).send({ message: 'internal server error' });
   }
