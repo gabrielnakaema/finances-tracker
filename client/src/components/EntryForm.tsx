@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import format from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
 import { NewEntry, Categories } from '../types';
 import TextInput from './TextInput';
@@ -63,20 +62,22 @@ const EntryForm = (props: EntryFormProps) => {
     }
 
     const newEntry: NewEntry = {
-      value: isExpense ? -1.0 * Number(value) : Number(value),
+      value: Number(value),
       description,
-      date: format(new Date(), 'yyyy-MM-dd'),
       category,
+      type: isExpense ? 'expense' : 'income',
     };
 
     if (isRecurring) {
       if (Number(recurringMonths) > 0) {
         const arrayOfNewEntries: NewEntry[] = [];
         let i;
+        const todaysDate = new Date();
+
         for (i = 0; i < Number(recurringMonths); i++) {
           arrayOfNewEntries.push({
             ...newEntry,
-            date: format(addMonths(new Date(), i), 'yyyy-MM-dd'),
+            date: addMonths(todaysDate, i).toISOString(),
           });
         }
         props.addEntries(arrayOfNewEntries);

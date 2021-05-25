@@ -1,9 +1,9 @@
-import { mockData } from './mockData';
 import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
 import { login, loginWithCache } from './utils';
+import { fetchAllEntries, addEntry } from './services/api';
 import './App.css';
 import LoginForm from './components/LoginForm';
 
@@ -24,8 +24,14 @@ function App() {
   }, [token]);
 
   useEffect(() => {
-    setData(mockData);
-  }, []);
+    if (token) {
+      const fetchEntries = async () => {
+        const entries = (await fetchAllEntries(token)) as Entry[];
+        setData(entries);
+      };
+      fetchEntries();
+    }
+  }, [token]);
 
   const handleLogin = async (username: string, password: string) => {
     try {
@@ -39,33 +45,21 @@ function App() {
     }
   };
 
-  const addNewEntry = (newEntry: NewEntry) => {
+  const addNewEntry = async (newEntry: NewEntry) => {
+    const receivedEntry = await addEntry(token, newEntry);
     if (data) {
-      setData([
-        ...data,
-        {
-          id: data.length + 1,
-          ...newEntry,
-        },
-      ]);
+      setData([...data, receivedEntry]);
     } else {
-      setData([
-        {
-          id: 1,
-          ...newEntry,
-        },
-      ]);
+      setData([receivedEntry]);
     }
   };
 
-  const addEntries = (newEntries: NewEntry[]) => {
-    setData([
-      ...data,
-      ...newEntries.map((el, index) => ({
-        ...el,
-        id: data.length + 1 + index,
-      })),
-    ]);
+  const addEntries = async (newEntries: NewEntry[]) => {
+    const addedEntriesPromises = newEntries.map((newEntry) =>
+      addEntry(token, newEntry)
+    );
+    const addedEntries = await Promise.all(addedEntriesPromises);
+    setData([...data, ...addedEntries]);
   };
 
   return (
