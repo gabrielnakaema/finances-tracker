@@ -11,17 +11,24 @@ export type Categories =
   | 'sideIncome'
   | 'other';
 
+export type EntryTypes = 'expense' | 'income';
+
 export interface Entry {
-  id: number;
+  _id: string;
   value: number;
   description: string;
-  date: string;
   category: Categories;
+  type: EntryTypes;
+  date: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface NewEntry {
   value: number;
   description: string;
-  date: string;
   category: Categories;
+  type: EntryTypes;
+  date?: string;
 }

@@ -24,7 +24,12 @@ const EntryList = (props: EntryListProps) => {
   }, [props.data, filterDate]);
 
   useEffect(() => {
-    setMonthlyTotal(displayData.reduce((acc, el) => acc + el.value, 0));
+    setMonthlyTotal(
+      displayData.reduce(
+        (acc, el) => (el.type === 'income' ? acc + el.value : acc - el.value),
+        0
+      )
+    );
   }, [displayData, filterDate]);
 
   const handleDecreaseMonth = () => {
@@ -56,7 +61,7 @@ const EntryList = (props: EntryListProps) => {
               borderWidth: '1px',
               alignItems: 'center',
             }}
-            key={el.id}
+            key={el._id}
           >
             <div style={{ width: '25%', textAlign: 'center' }}>
               <CategoryIcon category={el.category} size={'2rem'} />
@@ -81,7 +86,7 @@ const EntryList = (props: EntryListProps) => {
                 {el.description}
               </span>
               <div>
-                {el.value > 0 ? (
+                {el.type === 'income' ? (
                   <span
                     style={{
                       color: '#fff',
@@ -101,7 +106,7 @@ const EntryList = (props: EntryListProps) => {
                       borderRadius: '10px',
                     }}
                   >
-                    {(el.value * -1).toFixed(2).toString()}
+                    {el.value.toFixed(2).toString()}
                   </span>
                 )}
 
