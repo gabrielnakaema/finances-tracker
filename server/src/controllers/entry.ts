@@ -2,6 +2,15 @@ import { Response } from 'express';
 import { Entry } from '../models/entry';
 import { RequestWithUserId } from '../utils/middleware';
 
+interface NewEntry {
+  description: string;
+  value: number;
+  type: string;
+  category: string;
+  date?: string;
+  createdBy: string;
+}
+
 const getAll = async (req: RequestWithUserId, res: Response): Promise<void> => {
   const authorizedUserId = req.authorizedUserId;
   const entries = await Entry.find({ createdBy: authorizedUserId });
@@ -38,16 +47,19 @@ const create = async (
     }
   }
   const { description, value, type, category } = req.body;
-  const authorizedUserId = req.authorizedUserId;
-
-  const newEntry = await Entry.create({
+  const authorizedUserId = req.authorizedUserId as string;
+  const newEntry: NewEntry = {
     description,
     value,
     type,
     category,
     createdBy: authorizedUserId,
-  });
-  if (newEntry) {
+  };
+  if (req.body.date) {
+    newEntry.date = req.body.date;
+  }
+  const receivedEntry = await Entry.create(newEntry);
+  if (receivedEntry) {
     res.status(200).send(newEntry);
   }
 };
