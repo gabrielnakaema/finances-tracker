@@ -42,7 +42,7 @@ app.post('/register', create);
 
 app.post('/validatetoken', (req, res) => {
   if (!req.body.token) {
-    res.status(400).send({ message: 'token missing' });
+    return res.status(400).send({ message: 'token missing' });
   }
   if (validateToken(req.body.token)) {
     res.status(200).send({ message: 'valid token' });
