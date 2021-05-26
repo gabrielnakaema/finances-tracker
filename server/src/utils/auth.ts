@@ -17,7 +17,7 @@ export const checkPasswordEqualToHash = async (
 
 export const signToken = (userId: string): string | void => {
   if (process.env.SECRET) {
-    const token = jwt.sign({ userId }, process.env.SECRET);
+    const token = jwt.sign({ userId }, process.env.SECRET, { expiresIn: '1h' });
     return token;
   }
 };
@@ -26,8 +26,9 @@ export const validateToken = (tokenToValidate: string): boolean => {
   if (!tokenToValidate) {
     return false;
   }
+  const SECRET_KEY = process.env.SECRET as string;
   try {
-    const decoded = jwt.decode(tokenToValidate);
+    const decoded = jwt.verify(tokenToValidate, SECRET_KEY);
     if (decoded) {
       return true;
     } else {
