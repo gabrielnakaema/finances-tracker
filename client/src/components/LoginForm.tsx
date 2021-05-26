@@ -36,7 +36,7 @@ const LoginForm = (props: LoginFormProps) => {
           value={password}
           onChange={handlePasswordChange}
           labelText="Password"
-          type="text"
+          type="password"
           inputId="password-login-input"
         />
         <button type="submit">Login</button>
