@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
-import { login, loginWithCache } from './utils';
+import { login, loginWithCache, logout } from './utils';
 import { fetchAllEntries, addEntry } from './services/api';
 import './App.css';
 import LoginForm from './components/LoginForm';
@@ -45,6 +45,12 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    setToken('');
+    setData([]);
+  };
+
   const addNewEntry = async (newEntry: NewEntry) => {
     const receivedEntry = await addEntry(token, newEntry);
     if (data) {
@@ -66,7 +72,14 @@ function App() {
     <div
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      {token ? <h1>Logged In</h1> : <LoginForm handleLogin={handleLogin} />}
+      {token ? (
+        <div>
+          <h1>Logged In</h1>
+          <button onClick={handleLogout}>Log Out</button>
+        </div>
+      ) : (
+        <LoginForm handleLogin={handleLogin} />
+      )}
       <h1>Finances Tracker</h1>
       <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
       <EntryList data={data} />

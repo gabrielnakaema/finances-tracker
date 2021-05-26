@@ -20,6 +20,9 @@ export const login = async (
 
 export const loginWithCache = async () => {
   const cachedToken = window.localStorage.getItem('userToken');
+  if (!cachedToken) {
+    return;
+  }
   const response = await axios.post(
     `http://${apiBaseUrl}:${apiPort}/validatetoken`,
     {
@@ -32,5 +35,17 @@ export const loginWithCache = async () => {
     }
   } else {
     return;
+  }
+};
+
+export const logout = () => {
+  try {
+    if (window.localStorage.getItem('userToken')) {
+      window.localStorage.setItem('userToken', '');
+    } else {
+      return;
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
