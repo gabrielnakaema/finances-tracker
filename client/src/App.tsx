@@ -73,13 +73,13 @@ function App() {
         <div>
           <h1>Logged In</h1>
           <button onClick={handleLogout}>Log Out</button>
+          <h1>Finances Tracker</h1>
+          <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
+          <EntryList data={data} />
         </div>
       ) : (
         <LoginForm handleLogin={handleLogin} />
       )}
-      <h1>Finances Tracker</h1>
-      <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
-      <EntryList data={data} />
     </div>
   );
 }
