@@ -4,7 +4,6 @@ import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
 import { login, loginWithCache, logout } from './utils';
 import { fetchAllEntries, addEntry } from './services/api';
-import './App.css';
 import LoginForm from './components/LoginForm';
 
 function App() {
