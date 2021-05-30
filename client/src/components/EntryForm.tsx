@@ -112,13 +112,12 @@ const EntryForm = (props: EntryFormProps) => {
     <>
       <h2>Add New Entry</h2>
       <form onSubmit={handleSubmit}>
-        <div style={{ textAlign: 'center' }}>
+        <div>
           <input
             id="recurring-checkbox"
             type="checkbox"
             checked={isRecurring}
             onChange={handleRecurringCheckboxChange}
-            style={{ margin: 'auto' }}
           />{' '}
           <label htmlFor="recurring-checkbox">Recurring</label>
           {isRecurring && (
@@ -128,7 +127,6 @@ const EntryForm = (props: EntryFormProps) => {
               type="number"
               min="0"
               inputId="recurring-months-input"
-              inputStyle={{ margin: 'auto' }}
               labelText="Months to repeat entry:"
             />
           )}
@@ -158,7 +156,6 @@ const EntryForm = (props: EntryFormProps) => {
             type="number"
             min="0"
             inputId="value-input"
-            inputStyle={{ margin: 'auto' }}
             labelText="Value"
           />
           <TextInput
@@ -166,7 +163,6 @@ const EntryForm = (props: EntryFormProps) => {
             onChange={handleDescriptionChange}
             type="text"
             inputId="description-input"
-            inputStyle={{ margin: 'auto' }}
             labelText="Description"
           />
           <br />
@@ -200,9 +196,7 @@ const EntryForm = (props: EntryFormProps) => {
             </select>
           )}
           <br />
-          <label htmlFor="create-button" style={{ display: 'none' }}>
-            Create Entry
-          </label>
+          <label htmlFor="create-button">Create Entry</label>
           <button id="create-button" type="submit">
             Create
           </button>

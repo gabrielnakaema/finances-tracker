@@ -51,68 +51,20 @@ const EntryList = (props: EntryListProps) => {
       <h2>Total : {monthlyTotal.toFixed(2)}</h2>
       {displayData ? (
         displayData.map((el) => (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              height: '5rem',
-              width: '70%',
-              borderStyle: 'solid',
-              borderWidth: '1px',
-              alignItems: 'center',
-            }}
-            key={el._id}
-          >
-            <div style={{ width: '25%', textAlign: 'center' }}>
+          <div key={el._id}>
+            <div>
               <CategoryIcon category={el.category} size={'2rem'} />
             </div>
-            <div
-              style={{
-                flex: 1,
-                flexGrow: 1,
-                flexDirection: 'row',
-                marginRight: '1rem',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              <span
-                style={{
-                  maxWidth: '70%',
-                  marginLeft: 'auto',
-                }}
-              >
-                {el.description}
-              </span>
+            <div>
+              <span>{el.description}</span>
               <div>
                 {el.type === 'income' ? (
-                  <span
-                    style={{
-                      color: '#fff',
-                      backgroundColor: 'green',
-                      padding: '0 1rem',
-                      borderRadius: '10px',
-                    }}
-                  >
-                    {el.value.toFixed(2).toString()}
-                  </span>
+                  <span>{el.value.toFixed(2).toString()}</span>
                 ) : (
-                  <span
-                    style={{
-                      color: '#fff',
-                      backgroundColor: 'red',
-                      padding: '0 1rem',
-                      borderRadius: '10px',
-                    }}
-                  >
-                    {el.value.toFixed(2).toString()}
-                  </span>
+                  <span>{el.value.toFixed(2).toString()}</span>
                 )}
 
-                <span style={{ float: 'right' }}>
-                  {format(parseISO(el.date), 'MMM dd')}
-                </span>
+                <span>{format(parseISO(el.date), 'MMM dd')}</span>
               </div>
             </div>
           </div>

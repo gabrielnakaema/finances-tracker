@@ -68,9 +68,7 @@ function App() {
   };
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-    >
+    <div>
       {token ? (
         <div>
           <h1>Logged In</h1>

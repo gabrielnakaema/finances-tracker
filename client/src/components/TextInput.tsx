@@ -8,7 +8,6 @@ interface TextInputProps {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   min?: string;
-  inputStyle?: React.CSSProperties;
 }
 
 const TextInput = (props: TextInputProps) => {
@@ -23,7 +22,6 @@ const TextInput = (props: TextInputProps) => {
         min={props.min}
         value={props.value}
         onChange={props.onChange}
-        style={{ ...props.inputStyle }}
       ></input>
     </div>
   );
