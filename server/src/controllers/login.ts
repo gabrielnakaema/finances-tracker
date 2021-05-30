@@ -20,7 +20,7 @@ export const login = async (
   if (!foundUser) {
     return res.status(401).send({ message: 'invalid username' });
   }
-  const doesPasswordMatch = checkPasswordEqualToHash(
+  const doesPasswordMatch = await checkPasswordEqualToHash(
     password,
     foundUser.password
   );
