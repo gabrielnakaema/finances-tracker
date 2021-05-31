@@ -4,7 +4,6 @@ import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
 import { login, loginWithCache, logout } from './utils';
 import { fetchAllEntries, addEntry } from './services/api';
-import './App.css';
 import LoginForm from './components/LoginForm';
 
 function App() {
@@ -69,21 +68,29 @@ function App() {
   };
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-    >
+    <>
       {token ? (
         <div>
-          <h1>Logged In</h1>
-          <button onClick={handleLogout}>Log Out</button>
+          <header className="flex flex-row justify-between items-center bg-blue-500 p-3">
+            <h1 className="font-bold text-white tracking-wide">
+              Finances Tracker
+            </h1>
+            <button
+              className="bg-red-600 text-white px-3 rounded font-bold"
+              onClick={handleLogout}
+            >
+              Log Out
+            </button>
+          </header>
+          <div className="w-full text-center md:w-1/2 m-auto">
+            <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
+            <EntryList data={data} />
+          </div>
         </div>
       ) : (
         <LoginForm handleLogin={handleLogin} />
       )}
-      <h1>Finances Tracker</h1>
-      <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
-      <EntryList data={data} />
-    </div>
+    </>
   );
 }
 

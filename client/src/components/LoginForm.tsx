@@ -39,7 +39,12 @@ const LoginForm = (props: LoginFormProps) => {
           type="password"
           inputId="password-login-input"
         />
-        <button type="submit">Login</button>
+        <button
+          type="submit"
+          className="bg-blue-500 p-3 hover:bg-blue-300 text-white rounded w-1/2 block mx-auto font-medium"
+        >
+          Login
+        </button>
       </form>
     </div>
   );

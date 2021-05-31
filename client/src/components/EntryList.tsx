@@ -41,78 +41,61 @@ const EntryList = (props: EntryListProps) => {
   };
 
   return (
-    <>
-      <h2>Entry List</h2>
-      <div>
-        <button onClick={handleDecreaseMonth}>{'<'}</button>
-        {format(filterDate, 'MMMM, yyyy')}
-        <button onClick={handleIncreaseMonth}>{'>'}</button>
+    <div className="flex flex-col items-center text-left">
+      <h2 className="text-gray-700 font-bold m-3 mt-5">Entry List</h2>
+      <div className="w-1/2 flex flex-row justify-between items-center">
+        <button
+          className="bg-blue-500 hover:bg-blue-300 text-white px-4 py-1 rounded"
+          onClick={handleDecreaseMonth}
+        >
+          {'<'}
+        </button>
+        <span className="font-semibold  text-gray-700">
+          {format(filterDate, 'MMMM, yyyy')}
+        </span>
+        <button
+          className="bg-blue-500 hover:bg-blue-300 text-white px-4 py-1 rounded"
+          onClick={handleIncreaseMonth}
+        >
+          {'>'}
+        </button>
       </div>
-      <h2>Total : {monthlyTotal.toFixed(2)}</h2>
+      <h2 className="text-gray-700 font-bold m-3">
+        Total : ${monthlyTotal.toFixed(2)}
+      </h2>
       {displayData ? (
         displayData.map((el) => (
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              height: '5rem',
-              width: '70%',
-              borderStyle: 'solid',
-              borderWidth: '1px',
-              alignItems: 'center',
-            }}
             key={el._id}
+            className=" shadow-md m-1 w-3/4 border border-gray-300 rounded"
           >
-            <div style={{ width: '25%', textAlign: 'center' }}>
-              <CategoryIcon category={el.category} size={'2rem'} />
-            </div>
             <div
-              style={{
-                flex: 1,
-                flexGrow: 1,
-                flexDirection: 'row',
-                marginRight: '1rem',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-              }}
+              className={`flex flex-row w-full h-full m-0 p-1 border-l-4 ${
+                el.type === 'income' ? 'border-green-700' : 'border-red-600'
+              } rounded`}
             >
-              <span
-                style={{
-                  maxWidth: '70%',
-                  marginLeft: 'auto',
-                }}
-              >
-                {el.description}
-              </span>
-              <div>
-                {el.type === 'income' ? (
-                  <span
-                    style={{
-                      color: '#fff',
-                      backgroundColor: 'green',
-                      padding: '0 1rem',
-                      borderRadius: '10px',
-                    }}
-                  >
-                    {el.value.toFixed(2).toString()}
-                  </span>
-                ) : (
-                  <span
-                    style={{
-                      color: '#fff',
-                      backgroundColor: 'red',
-                      padding: '0 1rem',
-                      borderRadius: '10px',
-                    }}
-                  >
-                    {el.value.toFixed(2).toString()}
-                  </span>
-                )}
-
-                <span style={{ float: 'right' }}>
-                  {format(parseISO(el.date), 'MMM dd')}
+              <div className="flex items-center justify-center m-2">
+                <CategoryIcon category={el.category} size={'2rem'} />
+              </div>
+              <div className="w-full m-2">
+                <span className="block py-1 text-gray-900">
+                  {el.description}
                 </span>
+                <div className="flex flex-row justify-between">
+                  {el.type === 'income' ? (
+                    <span className="px-2 bg-green-700 rounded-full text-white">
+                      ${el.value.toFixed(2).toString()}
+                    </span>
+                  ) : (
+                    <span className="px-2 bg-red-600 rounded-full text-white">
+                      ${el.value.toFixed(2).toString()}
+                    </span>
+                  )}
+
+                  <span className="text-gray-500">
+                    {format(parseISO(el.date), 'MMM dd')}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -120,7 +103,7 @@ const EntryList = (props: EntryListProps) => {
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 };
 
