@@ -21,3 +21,13 @@ export const addEntry = async (token: string, newEntry: NewEntry) => {
   );
   return response.data as Entry;
 };
+
+export const deleteEntry = async (token: string, id: string) => {
+  const response = await axios.delete(
+    `http://${apiBaseUrl}:${apiPort}/entries/${id}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.status;
+};

@@ -5,9 +5,11 @@ import { useState, useEffect } from 'react';
 import addMonths from 'date-fns/addMonths';
 import CategoryIcon from './CategoryIcon';
 import { Entry } from '../types';
+import { CgTrash } from 'react-icons/cg';
 
 interface EntryListProps {
   data: Entry[];
+  handleDelete: (id: string) => void;
 }
 
 const EntryList = (props: EntryListProps) => {
@@ -78,10 +80,17 @@ const EntryList = (props: EntryListProps) => {
                 <CategoryIcon category={el.category} size={'2rem'} />
               </div>
               <div className="w-full m-2">
-                <span className="block py-1 text-gray-900">
-                  {el.description}
-                </span>
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-row items-center justify-between py-1">
+                  <span className="block py-1 text-gray-900">
+                    {el.description}
+                  </span>
+                  <div className="flex flex-row">
+                    <button onClick={() => props.handleDelete(el._id)}>
+                      <CgTrash size="1.5rem" className="ml-1 text-gray-700" />
+                    </button>
+                  </div>
+                </div>
+                <div className="flex flex-row justify-between py-1">
                   {el.type === 'income' ? (
                     <span className="px-2 bg-green-700 rounded-full text-white">
                       ${el.value.toFixed(2).toString()}

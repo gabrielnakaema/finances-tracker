@@ -3,7 +3,7 @@ import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
 import { login, loginWithCache, logout } from './utils';
-import { fetchAllEntries, addEntry } from './services/api';
+import { fetchAllEntries, addEntry, deleteEntry } from './services/api';
 import LoginForm from './components/LoginForm';
 
 function App() {
@@ -70,6 +70,21 @@ function App() {
     setData([...data, ...addedEntries]);
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm('do you really want to delete this entry ? ')) {
+      const status = await deleteEntry(token, id);
+      if (status === 200) {
+        const updatedData = data.filter((entry) => entry._id !== id);
+        setData(updatedData);
+      } else {
+        console.log('unable to delete');
+        return;
+      }
+    } else {
+      return;
+    }
+  };
+
   return (
     <>
       {token ? (
@@ -87,7 +102,7 @@ function App() {
           </header>
           <div className="w-full text-center md:w-1/2 m-auto">
             <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
-            <EntryList data={data} />
+            <EntryList data={data} handleDelete={handleDelete} />
           </div>
         </div>
       ) : (
