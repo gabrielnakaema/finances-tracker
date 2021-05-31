@@ -7,8 +7,8 @@ import { fetchAllEntries, addEntry } from './services/api';
 import LoginForm from './components/LoginForm';
 
 function App() {
-  const [data, setData] = useState<Entry[]>([]);
   const [token, setToken] = useState('');
+  const [data, setData] = useState<Entry[]>([]);
 
   useEffect(() => {
     if (!token) {
@@ -50,12 +50,15 @@ function App() {
     setData([]);
   };
 
-  const addNewEntry = async (newEntry: NewEntry) => {
+  const addNewEntry = async (newEntry: NewEntry): Promise<void> => {
     const receivedEntry = await addEntry(token, newEntry);
-    if (data) {
-      setData([...data, receivedEntry]);
-    } else {
-      setData([receivedEntry]);
+    if (receivedEntry) {
+      if (data) {
+        const newDataArray = [...data, receivedEntry];
+        setData(newDataArray);
+      } else {
+        setData([receivedEntry]);
+      }
     }
   };
 
