@@ -60,7 +60,7 @@ const create = async (
   }
   const receivedEntry = await Entry.create(newEntry);
   if (receivedEntry) {
-    res.status(200).send(newEntry);
+    res.status(200).send(receivedEntry);
   }
 };
 
