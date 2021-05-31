@@ -68,19 +68,29 @@ function App() {
   };
 
   return (
-    <div>
+    <>
       {token ? (
         <div>
-          <h1>Logged In</h1>
-          <button onClick={handleLogout}>Log Out</button>
-          <h1>Finances Tracker</h1>
-          <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
-          <EntryList data={data} />
+          <header className="flex flex-row justify-between items-center bg-blue-500 p-3">
+            <h1 className="font-bold text-white tracking-wide">
+              Finances Tracker
+            </h1>
+            <button
+              className="bg-red-600 text-white px-3 rounded font-bold"
+              onClick={handleLogout}
+            >
+              Log Out
+            </button>
+          </header>
+          <div className="w-full text-center md:w-1/2 m-auto">
+            <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
+            <EntryList data={data} />
+          </div>
         </div>
       ) : (
         <LoginForm handleLogin={handleLogin} />
       )}
-    </div>
+    </>
   );
 }
 

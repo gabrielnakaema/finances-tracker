@@ -20,17 +20,17 @@ type CategoryComponentMatch = { [key in Categories]: JSX.Element };
 
 const CategoryIcon = (props: CategoryIconProps) => {
   const categoryComponent: CategoryComponentMatch = {
-    stocks: <GoGraph size={props.size} />,
-    health: <GiHospitalCross size={props.size} color={'red'} />,
-    transport: <BiBus size={props.size} />,
-    mainSalary: <GiSuitcase size={props.size} />,
-    housing: <BiBuildingHouse size={props.size} />,
-    food: <GiSlicedBread size={props.size} />,
-    utilities: <FaBolt size={props.size} />,
-    savings: <GrMoney size={props.size} />,
-    entertainment: <GiPopcorn size={props.size} />,
-    sideIncome: <FaMoneyBill size={props.size} />,
-    other: <GiCardRandom size={props.size} />,
+    stocks: <GoGraph size={props.size} color="rgba(55, 65, 81,1)" />,
+    health: <GiHospitalCross size={props.size} color="rgba(55, 65, 81,1)" />,
+    transport: <BiBus size={props.size} color="rgba(55, 65, 81,1)" />,
+    mainSalary: <GiSuitcase size={props.size} color="rgba(55, 65, 81,1)" />,
+    housing: <BiBuildingHouse size={props.size} color="rgba(55, 65, 81,1)" />,
+    food: <GiSlicedBread size={props.size} color="rgba(55, 65, 81,1)" />,
+    utilities: <FaBolt size={props.size} color="rgba(55, 65, 81,1)" />,
+    savings: <GrMoney size={props.size} color="rgba(55, 65, 81,1)" />,
+    entertainment: <GiPopcorn size={props.size} color="rgba(55, 65, 81,1)" />,
+    sideIncome: <FaMoneyBill size={props.size} color="rgba(55, 65, 81,1)" />,
+    other: <GiCardRandom size={props.size} color="rgba(55, 65, 81,1)" />,
   };
   return categoryComponent[props.category];
 };

@@ -101,8 +101,8 @@ const EntryForm = (props: EntryFormProps) => {
 
   return (
     <>
-      <h2>Add New Entry</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className="block font-bold text-gray-700 m-3">Add New Entry</h2>
+      <form className="text-left" onSubmit={handleSubmit}>
         <div>
           <TextInput
             value={description}
@@ -203,9 +203,7 @@ const EntryForm = (props: EntryFormProps) => {
             inputId="recurring-months-input"
             labelText="Months to repeat entry:"
           />
-          <label className="hidden" htmlFor="create-button">
-            Create Entry
-          </label>
+
           <button
             id="create-button"
             className="bg-blue-500 hover:bg-blue-300 p-3 text-white rounded w-1/2 block mx-auto font-medium"
