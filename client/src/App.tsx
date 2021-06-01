@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
 import { Entry, NewEntry } from './types';
-import { login, loginWithCache, logout } from './utils';
+import { logout } from './utils';
+import { login, loginWithCache } from './services/auth';
 import { fetchAllEntries, addEntry, deleteEntry } from './services/api';
 import LoginForm from './components/LoginForm';
 
