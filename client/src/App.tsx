@@ -5,6 +5,7 @@ import { Entry, NewEntry } from './types';
 import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
 import LoginForm from './components/LoginForm';
 import { AuthContext } from './contexts/AuthContext';
+import Header from './components/Header';
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -59,29 +60,13 @@ function App() {
     }
   };
 
-  const handleLogout = () => {
-    authContext.signOut();
-  };
-
   return (
     <>
+      <Header />
       {authContext.isSignedIn ? (
-        <div>
-          <header className="flex flex-row justify-between items-center bg-blue-500 p-3">
-            <h1 className="font-bold text-white tracking-wide">
-              Finances Tracker
-            </h1>
-            <button
-              className="bg-red-600 text-white px-3 rounded font-bold"
-              onClick={handleLogout}
-            >
-              Log Out
-            </button>
-          </header>
-          <div className="w-full text-center md:w-1/2 m-auto">
-            <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
-            <EntryList data={data} handleDelete={handleDelete} />
-          </div>
+        <div className="w-full text-center md:w-1/2 m-auto">
+          <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
+          <EntryList data={data} handleDelete={handleDelete} />
         </div>
       ) : (
         <LoginForm handleLogin={handleLogin} />
