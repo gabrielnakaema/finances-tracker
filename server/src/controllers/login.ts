@@ -52,10 +52,30 @@ export const validate = async (
     return res.status(400).send({ message: 'token missing' });
   }
 
-  const decodedAuthObject = validateToken(req.body.token);
-  if (decodedAuthObject) {
-    res.status(200).send(decodedAuthObject);
+  const userId = validateToken(req.body.token);
+  if (userId) {
+    try {
+      const foundUser = await User.findOne({ _id: userId });
+      if (foundUser) {
+        return res.status(200).send({
+          auth: true,
+          token: req.body.token,
+          user: {
+            name: foundUser.name,
+            username: foundUser.username,
+          },
+        });
+      } else {
+        return res
+          .status(404)
+          .send({ message: 'user with sent token not found' });
+      }
+    } catch (error) {
+      return res
+        .status(404)
+        .send({ message: 'user with sent token not found' });
+    }
   } else {
-    res.status(400).send({ message: 'invalid token' });
+    res.status(401).send({ message: 'unauthorized token' });
   }
 };
