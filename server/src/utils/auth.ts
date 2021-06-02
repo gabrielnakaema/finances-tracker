@@ -1,6 +1,15 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
+interface DecodedAuthObject {
+  auth: boolean;
+  token: string;
+  user: {
+    name: string;
+    username: string;
+  };
+}
+
 export const hashPassword = async (textPassword: string): Promise<string> => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(textPassword, saltRounds);
@@ -22,19 +31,24 @@ export const signToken = (userId: string): string | void => {
   }
 };
 
-export const validateToken = (tokenToValidate: string): boolean => {
+export const validateToken = (
+  tokenToValidate: string
+): DecodedAuthObject | undefined => {
   if (!tokenToValidate) {
-    return false;
+    return;
   }
   const SECRET_KEY = process.env.SECRET as string;
   try {
-    const decoded = jwt.verify(tokenToValidate, SECRET_KEY);
+    const decoded = jwt.verify(
+      tokenToValidate,
+      SECRET_KEY
+    ) as DecodedAuthObject;
     if (decoded) {
-      return true;
+      return decoded;
     } else {
-      return false;
+      return;
     }
   } catch (error) {
-    return false;
+    return;
   }
 };

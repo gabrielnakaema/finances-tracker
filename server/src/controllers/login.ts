@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { User } from '../models/user';
-import { checkPasswordEqualToHash, signToken } from '../utils/auth';
+import {
+  checkPasswordEqualToHash,
+  signToken,
+  validateToken,
+} from '../utils/auth';
 
 export const login = async (
   req: Request,
@@ -27,8 +31,31 @@ export const login = async (
 
   if (doesPasswordMatch) {
     const token = signToken(foundUser._id);
-    return res.status(200).send({ auth: true, token });
+    return res.status(200).send({
+      auth: true,
+      token,
+      user: {
+        name: foundUser.name,
+        username: foundUser.username,
+      },
+    });
   } else {
     return res.status(401).send({ message: 'wrong credentials' });
+  }
+};
+
+export const validate = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  if (!req.body.token) {
+    return res.status(400).send({ message: 'token missing' });
+  }
+
+  const decodedAuthObject = validateToken(req.body.token);
+  if (decodedAuthObject) {
+    res.status(200).send(decodedAuthObject);
+  } else {
+    res.status(400).send({ message: 'invalid token' });
   }
 };
