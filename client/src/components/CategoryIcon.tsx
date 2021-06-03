@@ -32,7 +32,11 @@ const CategoryIcon = (props: CategoryIconProps) => {
     sideIncome: <FaMoneyBill size={props.size} color="rgba(55, 65, 81,1)" />,
     other: <GiCardRandom size={props.size} color="rgba(55, 65, 81,1)" />,
   };
-  return categoryComponent[props.category];
+  if (props.category in Object.keys(categoryComponent)) {
+    return categoryComponent[props.category];
+  } else {
+    return categoryComponent.other;
+  }
 };
 
 export default CategoryIcon;
