@@ -22,19 +22,28 @@ export const signToken = (userId: string): string | void => {
   }
 };
 
-export const validateToken = (tokenToValidate: string): boolean => {
+type DecodedValidationObject = {
+  userId: string;
+  iat: number;
+  exp: number;
+};
+
+export const validateToken = (tokenToValidate: string): string | undefined => {
   if (!tokenToValidate) {
-    return false;
+    console.log('missing token to validate');
+    return;
   }
   const SECRET_KEY = process.env.SECRET as string;
   try {
-    const decoded = jwt.verify(tokenToValidate, SECRET_KEY);
+    const decoded = jwt.verify(tokenToValidate, SECRET_KEY) as
+      | DecodedValidationObject
+      | undefined;
     if (decoded) {
-      return true;
+      return decoded.userId;
     } else {
-      return false;
+      return;
     }
   } catch (error) {
-    return false;
+    return;
   }
 };
