@@ -5,13 +5,13 @@ interface TextFieldHookReturn {
   type: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onBlur: (event: FocusEvent<HTMLInputElement>) => void;
-  error: string | undefined;
+  error: string;
   reset: () => void;
 }
 
 export const useTextField = (
   type: string,
-  validate: (text: string) => string | undefined
+  validate: (text: string) => string
 ): TextFieldHookReturn => {
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
@@ -22,6 +22,12 @@ export const useTextField = (
 
   const onBlur = (event: FocusEvent<HTMLInputElement>) => {
     const fieldValue = event.target.value;
+    if (!fieldValue) {
+      if (error) {
+        setError('');
+      }
+      return;
+    }
     const message = validate(fieldValue);
     if (message) {
       setError(message);

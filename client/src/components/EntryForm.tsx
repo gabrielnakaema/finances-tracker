@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import addMonths from 'date-fns/addMonths';
 import { NewEntry, Categories } from '../types';
 import TextInput from './TextInput';
+import { useTextField } from '../hooks/useTextField';
+import {
+  validateEntryValue,
+  validateDescription,
+  validateRecurringMonths,
+} from '../utils/validation';
 
 interface EntryFormProps {
   addNewEntry: (newEntry: NewEntry) => void;
@@ -9,11 +15,11 @@ interface EntryFormProps {
 }
 
 const EntryForm = (props: EntryFormProps) => {
-  const [value, setValue] = useState('');
-  const [description, setDescription] = useState('');
   const [isExpense, setIsExpense] = useState(true);
-  const [recurringMonths, setRecurringMonths] = useState('');
   const [category, setCategory] = useState<Categories>('other');
+  const value = useTextField('text', validateEntryValue);
+  const description = useTextField('text', validateDescription);
+  const recurringMonths = useTextField('number', validateRecurringMonths);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const category = e.target.value as Categories;
@@ -22,56 +28,27 @@ const EntryForm = (props: EntryFormProps) => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-
-    function isNumeric(value: string) {
-      if (isNaN(Number(value))) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    function isNull(string: string) {
-      if (string.length === 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
     function resetFormValues() {
-      setValue('');
-      setDescription('');
-      setRecurringMonths('');
+      value.reset();
+      description.reset();
+      recurringMonths.reset();
       setCategory('other');
       setIsExpense(true);
     }
 
-    if (!isNumeric(value)) {
-      window.alert('New entry value should be numeric');
-      resetFormValues();
-      return;
-    }
-
-    if (isNull(description)) {
-      window.alert('New entry description should not be empty');
-      resetFormValues();
-      return;
-    }
-
     const newEntry: NewEntry = {
-      value: Number(value),
-      description,
+      value: Number(value.value),
+      description: description.value,
       category,
       type: isExpense ? 'expense' : 'income',
     };
 
-    if (Number(recurringMonths) > 0) {
+    if (Number(recurringMonths.value) > 0) {
       const arrayOfNewEntries: NewEntry[] = [];
       let i;
       const todaysDate = new Date();
 
-      for (i = 0; i < Number(recurringMonths); i++) {
+      for (i = 0; i < Number(recurringMonths.value); i++) {
         arrayOfNewEntries.push({
           ...newEntry,
           date: addMonths(todaysDate, i).toISOString(),
@@ -85,39 +62,28 @@ const EntryForm = (props: EntryFormProps) => {
     resetFormValues();
   };
 
-  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value);
-  };
-
-  const handleRecurringMonthsChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRecurringMonths(e.target.value);
-  };
-
   return (
     <>
       <h2 className="block font-bold text-gray-700 m-3">Add New Entry</h2>
       <form className="text-left" onSubmit={handleSubmit}>
         <div>
           <TextInput
-            value={description}
-            onChange={handleDescriptionChange}
-            type="text"
+            value={description.value}
+            onChange={description.onChange}
+            onBlur={description.onBlur}
+            type={description.type}
             inputId="description-input"
             labelText="Description"
+            error={description.error}
           />
           <TextInput
-            value={value}
-            onChange={handleValueChange}
-            type="number"
-            min="0"
+            value={value.value}
+            onChange={value.onChange}
+            type={value.type}
+            onBlur={value.onBlur}
             inputId="value-input"
             labelText="Value"
+            error={value.error}
           />
           <div className="mx-3 mb-3">
             <p className="block text-gray-700 font-bold mb-2">Entry type</p>
@@ -196,12 +162,13 @@ const EntryForm = (props: EntryFormProps) => {
             </div>
           </div>
           <TextInput
-            value={recurringMonths}
-            onChange={handleRecurringMonthsChange}
-            type="number"
-            min="0"
+            value={recurringMonths.value}
+            onChange={recurringMonths.onChange}
+            type={recurringMonths.type}
+            onBlur={recurringMonths.onBlur}
             inputId="recurring-months-input"
             labelText="Months to repeat entry:"
+            error={recurringMonths.error}
           />
 
           <button
