@@ -1,43 +1,41 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TextInput from './TextInput';
+import { validateUsername, validatePassword } from '../utils/validation';
+import { useTextField } from '../hooks/useTextField';
 
 interface LoginFormProps {
   handleLogin: (username: string, password: string) => void;
 }
 
 const LoginForm = (props: LoginFormProps) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  const username = useTextField('text', validateUsername);
+  const password = useTextField('password', validatePassword);
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.handleLogin(username, password);
+    props.handleLogin(username.value, password.value);
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <TextInput
-          value={username}
-          onChange={handleUsernameChange}
+          value={username.value}
+          onChange={username.onChange}
+          onBlur={username.onBlur}
           labelText="Username"
           type="text"
           inputId="username-login-input"
+          error=""
         />
         <TextInput
-          value={password}
-          onChange={handlePasswordChange}
+          value={password.value}
+          onChange={password.onChange}
+          onBlur={password.onBlur}
           labelText="Password"
           type="password"
           inputId="password-login-input"
+          error=""
         />
         <button
           type="submit"
