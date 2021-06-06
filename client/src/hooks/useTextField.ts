@@ -7,6 +7,7 @@ interface TextFieldHookReturn {
   onBlur: (event: FocusEvent<HTMLInputElement>) => void;
   error: string;
   reset: () => void;
+  callValidation: () => boolean;
 }
 
 export const useTextField = (
@@ -38,10 +39,19 @@ export const useTextField = (
     }
   };
 
+  const callValidation = (): boolean => {
+    const errorFromNewValidation = validate(value);
+    if (errorFromNewValidation) {
+      setError(errorFromNewValidation);
+      return false;
+    }
+    return true;
+  };
+
   const reset = () => {
     setValue('');
     setError('');
   };
 
-  return { value, onChange, type, onBlur, error, reset };
+  return { value, onChange, type, onBlur, error, reset, callValidation };
 };
