@@ -28,6 +28,15 @@ const EntryForm = (props: EntryFormProps) => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
+
+    const isValueOk = !value.error && value.callValidation();
+    const isDescriptionOk = !description.error && description.callValidation();
+    const isRecurringMonthsOk =
+      !recurringMonths.error && recurringMonths.callValidation();
+    if (!isValueOk || !isDescriptionOk || !isRecurringMonthsOk) {
+      return;
+    }
+
     function resetFormValues() {
       value.reset();
       description.reset();
@@ -35,20 +44,20 @@ const EntryForm = (props: EntryFormProps) => {
       setCategory('other');
       setIsExpense(true);
     }
-
     const newEntry: NewEntry = {
       value: Number(value.value),
       description: description.value,
       category,
       type: isExpense ? 'expense' : 'income',
     };
+    const numberOfRecurringMonths = Number(recurringMonths.value);
 
-    if (Number(recurringMonths.value) > 0) {
+    if (numberOfRecurringMonths > 0) {
       const arrayOfNewEntries: NewEntry[] = [];
       let i;
       const todaysDate = new Date();
 
-      for (i = 0; i < Number(recurringMonths.value); i++) {
+      for (i = 0; i < numberOfRecurringMonths; i++) {
         arrayOfNewEntries.push({
           ...newEntry,
           date: addMonths(todaysDate, i).toISOString(),
@@ -58,7 +67,6 @@ const EntryForm = (props: EntryFormProps) => {
     } else {
       props.addNewEntry(newEntry);
     }
-
     resetFormValues();
   };
 

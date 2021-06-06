@@ -13,6 +13,13 @@ const LoginForm = (props: LoginFormProps) => {
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const isUsernameOk = !username.error && username.callValidation();
+    const isPasswordOk = !password.error && password.callValidation();
+    if (!isUsernameOk || !isPasswordOk) {
+      return;
+    }
+
     props.handleLogin(username.value, password.value);
   };
 
@@ -26,7 +33,7 @@ const LoginForm = (props: LoginFormProps) => {
           labelText="Username"
           type="text"
           inputId="username-login-input"
-          error=""
+          error={username.error}
         />
         <TextInput
           value={password.value}
@@ -35,7 +42,7 @@ const LoginForm = (props: LoginFormProps) => {
           labelText="Password"
           type="password"
           inputId="password-login-input"
-          error=""
+          error={password.error}
         />
         <button
           type="submit"
