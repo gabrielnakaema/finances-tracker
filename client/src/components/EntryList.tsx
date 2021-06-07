@@ -43,16 +43,16 @@ const EntryList = (props: EntryListProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center text-left">
+    <div className="flex flex-col flex-grow items-center text-left border-gray-100 border m-3">
       <h2 className="text-gray-700 font-bold m-3 mt-5">Entry List</h2>
-      <div className="w-1/2 flex flex-row justify-between items-center">
+      <div className="min-w-1/2 flex flex-row justify-between items-center">
         <button
           className="bg-blue-500 hover:bg-blue-300 text-white px-4 py-1 rounded"
           onClick={handleDecreaseMonth}
         >
           {'<'}
         </button>
-        <span className="font-semibold  text-gray-700">
+        <span className="font-semibold px-1 text-gray-700">
           {format(filterDate, 'MMMM, yyyy')}
         </span>
         <button
@@ -69,22 +69,22 @@ const EntryList = (props: EntryListProps) => {
         displayData.map((el) => (
           <div
             key={el._id}
-            className=" shadow-md m-1 w-3/4 border border-gray-300 rounded"
+            className=" shadow-md m-1 w-4/5 border border-gray-300 rounded overflow-hidden"
           >
             <div
-              className={`flex flex-row w-full h-full m-0 p-1 border-l-4 ${
+              className={`flex flex-row h-full w-full m-0 p-1 border-l-4 ${
                 el.type === 'income' ? 'border-green-700' : 'border-red-600'
               } rounded`}
             >
               <div className="flex items-center justify-center m-2">
                 <CategoryIcon category={el.category} size={'2rem'} />
               </div>
-              <div className="w-full m-2">
-                <div className="flex flex-row items-center justify-between py-1">
-                  <span className="block py-1 text-gray-900">
+              <div className="m-2 flex-1 min-w-0">
+                <div className="flex flex-row items-center py-1 ">
+                  <span className="py-1 text-gray-900 min-w-0 overflow-hidden">
                     {el.description}
                   </span>
-                  <div className="flex flex-row">
+                  <div className="ml-auto mr-1">
                     <button onClick={() => props.handleDelete(el._id)}>
                       <CgTrash size="1.5rem" className="ml-1 text-gray-700" />
                     </button>
