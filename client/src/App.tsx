@@ -64,7 +64,7 @@ function App() {
     <>
       <Header />
       {authContext.isSignedIn ? (
-        <div className="w-full text-center md:w-1/2 m-auto">
+        <div className="flex flex-col md:flex-row-reverse">
           <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
           <EntryList data={data} handleDelete={handleDelete} />
         </div>

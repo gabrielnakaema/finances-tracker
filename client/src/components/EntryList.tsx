@@ -43,7 +43,7 @@ const EntryList = (props: EntryListProps) => {
   };
 
   return (
-    <div className="flex flex-col flex-grow items-center text-left border-gray-100 border m-3">
+    <div className="flex flex-col flex-grow items-center text-left border-gray-100 border m-3 md:w-1/2">
       <h2 className="text-gray-700 font-bold m-3 mt-5">Entry List</h2>
       <div className="min-w-1/2 flex flex-row justify-between items-center">
         <button
@@ -81,7 +81,7 @@ const EntryList = (props: EntryListProps) => {
               </div>
               <div className="m-2 flex-1 min-w-0">
                 <div className="flex flex-row items-center py-1 ">
-                  <span className="py-1 text-gray-900 min-w-0 overflow-hidden">
+                  <span className="py-1 text-gray-900 min-w-0 overflow-hidden whitespace-nowrap">
                     {el.description}
                   </span>
                   <div className="ml-auto mr-1">
