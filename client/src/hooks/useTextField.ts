@@ -18,6 +18,9 @@ export const useTextField = (
   const [error, setError] = useState('');
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (error) {
+      setError('');
+    }
     setValue(event.target.value);
   };
 
