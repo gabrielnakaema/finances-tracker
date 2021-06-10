@@ -27,9 +27,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const signInFromCache = async () => {
       const token = window.localStorage.getItem('userToken');
       if (token) {
-        const response = await loginWithCache(token);
-        if (response) {
-          setUser(response.user);
+        try {
+          const response = await loginWithCache(token);
+          if (response) {
+            setUser(response.user);
+          }
+        } catch (error) {
+          window.localStorage.setItem('userToken', '');
+          console.log(error);
         }
       }
     };
