@@ -8,6 +8,8 @@ import {
   validateDescription,
   validateRecurringMonths,
 } from '../utils/validation';
+import DatePicker from './DatePicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface EntryFormProps {
   addNewEntry: (newEntry: NewEntry) => void;
@@ -20,10 +22,15 @@ const EntryForm = (props: EntryFormProps) => {
   const value = useTextField('text', validateEntryValue);
   const description = useTextField('text', validateDescription);
   const recurringMonths = useTextField('number', validateRecurringMonths);
+  const [date, setDate] = useState(new Date());
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const category = e.target.value as Categories;
     setCategory(category);
+  };
+
+  const handleDateChange = (date: Date) => {
+    setDate(date);
   };
 
   const handleSubmit = (e: React.SyntheticEvent) => {
@@ -49,18 +56,18 @@ const EntryForm = (props: EntryFormProps) => {
       description: description.value,
       category,
       type: isExpense ? 'expense' : 'income',
+      date: date.toISOString(),
     };
     const numberOfRecurringMonths = Number(recurringMonths.value);
 
     if (numberOfRecurringMonths > 0) {
       const arrayOfNewEntries: NewEntry[] = [];
       let i;
-      const todaysDate = new Date();
 
       for (i = 0; i < numberOfRecurringMonths; i++) {
         arrayOfNewEntries.push({
           ...newEntry,
-          date: addMonths(todaysDate, i).toISOString(),
+          date: addMonths(date, i).toISOString(),
         });
       }
       props.addEntries(arrayOfNewEntries);
@@ -176,10 +183,10 @@ const EntryForm = (props: EntryFormProps) => {
               type={recurringMonths.type}
               onBlur={recurringMonths.onBlur}
               inputId="recurring-months-input"
-              labelText="Months to repeat entry:"
+              labelText="Months to repeat entry"
               error={recurringMonths.error}
             />
-
+            <DatePicker date={date} onChange={handleDateChange} />
             <button
               id="create-button"
               className="bg-blue-500 hover:bg-blue-300 p-3 text-white rounded w-1/2 block mx-auto font-medium"
