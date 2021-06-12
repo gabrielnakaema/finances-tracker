@@ -32,3 +32,9 @@ export interface NewEntry {
   type: EntryTypes;
   date?: string;
 }
+
+export interface NewUser {
+  name: string;
+  username: string;
+  password: string;
+}
