@@ -3,11 +3,11 @@ import TextInput from './TextInput';
 import { validateUsername, validatePassword } from '../utils/validation';
 import { useTextField } from '../hooks/useTextField';
 
-interface LoginFormProps {
-  handleLogin: (username: string, password: string) => void;
+interface SignInFormProps {
+  handleSignIn: (username: string, password: string) => void;
 }
 
-const LoginForm = (props: LoginFormProps) => {
+const SignInForm = (props: SignInFormProps) => {
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
 
@@ -20,7 +20,7 @@ const LoginForm = (props: LoginFormProps) => {
       return;
     }
 
-    props.handleLogin(username.value, password.value);
+    props.handleSignIn(username.value, password.value);
   };
 
   return (
@@ -48,11 +48,11 @@ const LoginForm = (props: LoginFormProps) => {
           type="submit"
           className="bg-blue-500 p-3 hover:bg-blue-300 text-white rounded w-1/2 block mx-auto font-medium"
         >
-          Login
+          Sign In
         </button>
       </form>
     </div>
   );
 };
 
-export default LoginForm;
+export default SignInForm;

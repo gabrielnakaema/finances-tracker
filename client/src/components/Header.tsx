@@ -4,7 +4,7 @@ import { AuthContext } from '../contexts/AuthContext';
 const Header = () => {
   const authContext = useContext(AuthContext);
 
-  const handleLogout = () => {
+  const handleSignOut = () => {
     authContext.signOut();
   };
 
@@ -14,9 +14,9 @@ const Header = () => {
       {authContext.isSignedIn ? (
         <button
           className="bg-red-600 text-white px-3 rounded font-bold"
-          onClick={handleLogout}
+          onClick={handleSignOut}
         >
-          Log Out
+          Sign Out
         </button>
       ) : (
         <></>

@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from './contexts/AuthContext';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
-import { Entry, NewEntry, NewUser } from './types';
-import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
-import { signUp } from './services/auth';
-import LoginForm from './components/LoginForm';
-import { AuthContext } from './contexts/AuthContext';
-import Header from './components/Header';
 import SignUpForm from './components/SignUpForm';
+import SignInForm from './components/SignInForm';
+import Header from './components/Header';
+import { signUp } from './services/auth';
+import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
+import { Entry, NewEntry, NewUser } from './types';
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -23,7 +23,7 @@ function App() {
     }
   }, [authContext.isSignedIn]);
 
-  const handleLogin = async (username: string, password: string) => {
+  const handleSignIn = async (username: string, password: string) => {
     await authContext.signIn(username, password);
   };
 
@@ -76,7 +76,7 @@ function App() {
         </div>
       ) : (
         <>
-          <LoginForm handleLogin={handleLogin} />
+          <SignInForm handleSignIn={handleSignIn} />
           <SignUpForm handleSignUp={handleSignUp} />
         </>
       )}
