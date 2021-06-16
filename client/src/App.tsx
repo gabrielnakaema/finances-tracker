@@ -8,10 +8,13 @@ import Header from './components/Header';
 import { signUp } from './services/auth';
 import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
 import { Entry, NewEntry, NewUser } from './types';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const authContext = useContext(AuthContext);
   const [data, setData] = useState<Entry[]>([]);
+  const history = useHistory();
 
   useEffect(() => {
     if (authContext.isSignedIn) {
@@ -21,10 +24,11 @@ function App() {
       };
       fetchEntries();
     }
-  }, [authContext.isSignedIn]);
+  }, [authContext]);
 
   const handleSignIn = async (username: string, password: string) => {
     await authContext.signIn(username, password);
+    history.push('/');
   };
 
   const handleSignUp = async (newUser: NewUser) => {
@@ -69,17 +73,23 @@ function App() {
   return (
     <>
       <Header />
-      {authContext.isSignedIn ? (
-        <div className="flex flex-col md:flex-row-reverse">
-          <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
-          <EntryList data={data} handleDelete={handleDelete} />
-        </div>
-      ) : (
-        <>
+      <Switch>
+        <Route path="/signin">
           <SignInForm handleSignIn={handleSignIn} />
+        </Route>
+        <Route path="/signup">
           <SignUpForm handleSignUp={handleSignUp} />
-        </>
-      )}
+        </Route>
+        <Route exact path="/">
+          <Redirect to="/entries" />
+        </Route>
+        <PrivateRoute path="/entries">
+          <div className="flex flex-col md:flex-row-reverse">
+            <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
+            <EntryList data={data} handleDelete={handleDelete} />
+          </div>
+        </PrivateRoute>
+      </Switch>
     </>
   );
 }
