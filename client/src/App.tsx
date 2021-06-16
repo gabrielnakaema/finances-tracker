@@ -1,11 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
-import EntryForm from './components/EntryForm';
-import EntryList from './components/EntryList';
-import { Entry, NewEntry } from './types';
-import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
-import LoginForm from './components/LoginForm';
 import { AuthContext } from './contexts/AuthContext';
 import Header from './components/Header';
+import SignInForm from './components/SignInForm';
+import SignUpForm from './components/SignUpForm';
+import EntryForm from './components/EntryForm';
+import EntryList from './components/EntryList';
+import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
+import { Entry, NewEntry } from './types';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -19,11 +22,7 @@ function App() {
       };
       fetchEntries();
     }
-  }, [authContext.isSignedIn]);
-
-  const handleLogin = async (username: string, password: string) => {
-    await authContext.signIn(username, password);
-  };
+  }, [authContext]);
 
   const addNewEntry = async (newEntry: NewEntry): Promise<void> => {
     const receivedEntry = await addEntry(newEntry);
@@ -63,14 +62,23 @@ function App() {
   return (
     <>
       <Header />
-      {authContext.isSignedIn ? (
-        <div className="flex flex-col md:flex-row-reverse">
-          <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
-          <EntryList data={data} handleDelete={handleDelete} />
-        </div>
-      ) : (
-        <LoginForm handleLogin={handleLogin} />
-      )}
+      <Switch>
+        <Route path="/signin">
+          <SignInForm />
+        </Route>
+        <Route path="/signup">
+          <SignUpForm />
+        </Route>
+        <Route exact path="/">
+          <Redirect to="/entries" />
+        </Route>
+        <PrivateRoute path="/entries">
+          <div className="flex flex-col md:flex-row-reverse">
+            <EntryForm addNewEntry={addNewEntry} addEntries={addEntries} />
+            <EntryList data={data} handleDelete={handleDelete} />
+          </div>
+        </PrivateRoute>
+      </Switch>
     </>
   );
 }

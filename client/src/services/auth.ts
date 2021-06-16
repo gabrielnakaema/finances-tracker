@@ -1,3 +1,4 @@
+import { NewUser } from '../types';
 import { api } from './api';
 
 interface LoginResponseObject {
@@ -37,5 +38,18 @@ export const loginWithCache = async (
     return response.data as LoginResponseObject;
   } else {
     throw new Error(`${response.status}:${response.data.message}`);
+  }
+};
+
+export const signUp = async (newUser: NewUser): Promise<void> => {
+  try {
+    const response = await api.post('/register', newUser);
+    if (response.status === 200) {
+      console.log('register ok');
+    } else {
+      console.log(response);
+    }
+  } catch (error) {
+    console.error(error);
   }
 };

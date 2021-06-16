@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { login, loginWithCache } from '../services/auth';
 import { api } from '../services/api';
 
@@ -22,6 +23,7 @@ export const AuthContext = createContext({} as AuthContextInfo);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const history = useHistory();
   const isSignedIn = !!user;
   useEffect(() => {
     const signInFromCache = async () => {
@@ -31,6 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           const response = await loginWithCache(token);
           if (response) {
             setUser(response.user);
+            history.push('/');
           }
         } catch (error) {
           window.localStorage.setItem('userToken', '');
@@ -39,6 +42,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     };
     signInFromCache();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signIn = async (username: string, password: string) => {
@@ -48,6 +52,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         api.defaults.headers['Authorization'] = `Bearer ${response.token}`;
         window.localStorage.setItem('userToken', response.token);
         setUser(response.user);
+        history.push('/');
       }
     } catch (error) {
       console.error(error);
