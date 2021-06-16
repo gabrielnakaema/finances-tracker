@@ -1,18 +1,14 @@
 import { useTextField } from '../hooks/useTextField';
 import TextInput from './TextInput';
-import { NewUser } from '../types';
 import { SyntheticEvent } from 'react';
+import { signUp } from '../services/auth';
 
-interface SignUpFormProps {
-  handleSignUp: (newUser: NewUser) => void;
-}
-
-const SignUpForm = (props: SignUpFormProps) => {
+const SignUpForm = () => {
   const name = useTextField('text', () => '');
   const username = useTextField('text', () => '');
   const password = useTextField('password', () => '');
 
-  const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isNameOk = !name.error && name.callValidation();
     const isUsernameOk = !username.error && username.callValidation();
@@ -20,7 +16,7 @@ const SignUpForm = (props: SignUpFormProps) => {
     if (!isUsernameOk || !isPasswordOk || !isNameOk) {
       return;
     }
-    props.handleSignUp({
+    await signUp({
       name: name.value,
       username: username.value,
       password: password.value,

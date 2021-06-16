@@ -52,6 +52,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         api.defaults.headers['Authorization'] = `Bearer ${response.token}`;
         window.localStorage.setItem('userToken', response.token);
         setUser(response.user);
+        history.push('/');
       }
     } catch (error) {
       console.error(error);

@@ -2,16 +2,15 @@ import React from 'react';
 import TextInput from './TextInput';
 import { validateUsername, validatePassword } from '../utils/validation';
 import { useTextField } from '../hooks/useTextField';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
-interface SignInFormProps {
-  handleSignIn: (username: string, password: string) => void;
-}
-
-const SignInForm = (props: SignInFormProps) => {
+const SignInForm = () => {
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
+  const authContext = useContext(AuthContext);
 
-  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const isUsernameOk = !username.error && username.callValidation();
@@ -20,7 +19,7 @@ const SignInForm = (props: SignInFormProps) => {
       return;
     }
 
-    props.handleSignIn(username.value, password.value);
+    await authContext.signIn(username.value, password.value);
   };
 
   return (

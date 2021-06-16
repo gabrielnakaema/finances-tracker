@@ -1,20 +1,18 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from './contexts/AuthContext';
+import Header from './components/Header';
+import SignInForm from './components/SignInForm';
+import SignUpForm from './components/SignUpForm';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
-import SignUpForm from './components/SignUpForm';
-import SignInForm from './components/SignInForm';
-import Header from './components/Header';
-import { signUp } from './services/auth';
 import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
-import { Entry, NewEntry, NewUser } from './types';
-import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
+import { Entry, NewEntry } from './types';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const authContext = useContext(AuthContext);
   const [data, setData] = useState<Entry[]>([]);
-  const history = useHistory();
 
   useEffect(() => {
     if (authContext.isSignedIn) {
@@ -25,15 +23,6 @@ function App() {
       fetchEntries();
     }
   }, [authContext]);
-
-  const handleSignIn = async (username: string, password: string) => {
-    await authContext.signIn(username, password);
-    history.push('/');
-  };
-
-  const handleSignUp = async (newUser: NewUser) => {
-    await signUp(newUser);
-  };
 
   const addNewEntry = async (newEntry: NewEntry): Promise<void> => {
     const receivedEntry = await addEntry(newEntry);
@@ -75,10 +64,10 @@ function App() {
       <Header />
       <Switch>
         <Route path="/signin">
-          <SignInForm handleSignIn={handleSignIn} />
+          <SignInForm />
         </Route>
         <Route path="/signup">
-          <SignUpForm handleSignUp={handleSignUp} />
+          <SignUpForm />
         </Route>
         <Route exact path="/">
           <Redirect to="/entries" />
