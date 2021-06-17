@@ -2,11 +2,14 @@ import { useTextField } from '../hooks/useTextField';
 import TextInput from './TextInput';
 import { SyntheticEvent } from 'react';
 import { signUp } from '../services/auth';
+import { validateUsername, validatePassword } from '../utils/validation';
 
 const SignUpForm = () => {
-  const name = useTextField('text', () => '');
-  const username = useTextField('text', () => '');
-  const password = useTextField('password', () => '');
+  const name = useTextField('text', (text: string) =>
+    text ? '' : 'Must not be empty.'
+  );
+  const username = useTextField('text', validateUsername);
+  const password = useTextField('password', validatePassword);
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
