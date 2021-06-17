@@ -22,7 +22,7 @@ const SignInForm = () => {
   };
 
   return (
-    <div>
+    <div className="sm:w-1/2 sm:mx-auto lg:w-1/4">
       <form onSubmit={handleSubmit}>
         <TextInput
           value={username.value}

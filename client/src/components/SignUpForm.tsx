@@ -30,7 +30,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="sm:w-1/2 sm:mx-auto lg:w-1/4" onSubmit={handleSubmit}>
       <TextInput
         value={name.value}
         onChange={name.onChange}
