@@ -40,14 +40,17 @@ export const authorizeUser = (
 
   const token = split[1];
 
-  jwt.verify(token, process.env.SECRET, (error, decoded) => {
-    if (error) {
-      return res.status(401).send({ message: 'failed to authenticate' });
-    }
-    const decodedInfo = decoded as DecodedObject;
-    req.authorizedUserId = decodedInfo.userId;
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET) as DecodedObject;
+    req.authorizedUserId = decoded.userId;
     next();
-  });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).send({ message: 'token is expired' });
+    } else {
+      return res.status(401).send({ message: error.message });
+    }
+  }
 };
 
 export const checkRequestUserId = (

@@ -30,8 +30,7 @@ type DecodedValidationObject = {
 
 export const validateToken = (tokenToValidate: string): string | undefined => {
   if (!tokenToValidate) {
-    console.log('missing token to validate');
-    return;
+    throw new Error('missing token');
   }
   const SECRET_KEY = process.env.SECRET as string;
   try {
@@ -41,9 +40,13 @@ export const validateToken = (tokenToValidate: string): string | undefined => {
     if (decoded) {
       return decoded.userId;
     } else {
-      return;
+      throw new Error('decoded token is empty');
     }
   } catch (error) {
-    return;
+    if (error.name === 'TokenExpiredError') {
+      throw new Error('token is expired');
+    } else {
+      throw new Error(error.message);
+    }
   }
 };

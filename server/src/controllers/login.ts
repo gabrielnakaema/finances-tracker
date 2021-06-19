@@ -22,7 +22,7 @@ export const login = async (
   const { username, password } = req.body;
   const foundUser = await User.findOne({ username });
   if (!foundUser) {
-    return res.status(401).send({ message: 'invalid username' });
+    return res.status(401).send({ message: 'username does not exist' });
   }
   const doesPasswordMatch = await checkPasswordEqualToHash(
     password,
@@ -32,7 +32,6 @@ export const login = async (
   if (doesPasswordMatch) {
     const token = signToken(foundUser._id);
     return res.status(200).send({
-      auth: true,
       token,
       user: {
         name: foundUser.name,
@@ -51,14 +50,18 @@ export const validate = async (
   if (!req.body.token) {
     return res.status(400).send({ message: 'token missing' });
   }
+  let userId: string | undefined;
+  try {
+    userId = validateToken(req.body.token);
+  } catch (error) {
+    return res.status(401).send({ message: error.message });
+  }
 
-  const userId = validateToken(req.body.token);
   if (userId) {
     try {
       const foundUser = await User.findOne({ _id: userId });
       if (foundUser) {
         return res.status(200).send({
-          auth: true,
           token: req.body.token,
           user: {
             name: foundUser.name,
@@ -67,12 +70,12 @@ export const validate = async (
         });
       } else {
         return res
-          .status(404)
+          .status(401)
           .send({ message: 'user with sent token not found' });
       }
     } catch (error) {
       return res
-        .status(404)
+        .status(401)
         .send({ message: 'user with sent token not found' });
     }
   } else {
