@@ -1,8 +1,9 @@
 import { useTextField } from '../hooks/useTextField';
 import TextInput from './TextInput';
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { signUp } from '../services/auth';
 import { validateUsername, validatePassword } from '../utils/validation';
+import ErrorMessage from './ErrorMessage';
 
 const SignUpForm = () => {
   const name = useTextField('text', (text: string) =>
@@ -10,6 +11,7 @@ const SignUpForm = () => {
   );
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,14 +21,18 @@ const SignUpForm = () => {
     if (!isUsernameOk || !isPasswordOk || !isNameOk) {
       return;
     }
-    await signUp({
-      name: name.value,
-      username: username.value,
-      password: password.value,
-    });
-    name.reset();
-    username.reset();
-    password.reset();
+    try {
+      await signUp({
+        name: name.value,
+        username: username.value,
+        password: password.value,
+      });
+      name.reset();
+      username.reset();
+      password.reset();
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -55,6 +61,7 @@ const SignUpForm = () => {
         error={password.error}
         labelText="Password"
       />
+      <ErrorMessage message={error} />
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-300 p-3 text-white rounded w-1/2 block mx-auto font-medium"

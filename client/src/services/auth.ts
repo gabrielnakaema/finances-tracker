@@ -47,9 +47,9 @@ export const signUp = async (newUser: NewUser): Promise<void> => {
     if (response.status === 200) {
       console.log('register ok');
     } else {
-      console.log(response);
+      throw new Error(response.data.message);
     }
   } catch (error) {
-    console.error(error);
+    throw new Error(error.response.data.message);
   }
 };
