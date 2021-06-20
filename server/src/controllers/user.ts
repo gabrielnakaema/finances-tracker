@@ -14,14 +14,22 @@ export const create = async (
   }
   const { username, password, name } = req.body;
   const hashedPassword = await hashPassword(password);
-  const newUser = await User.create({
-    name,
-    username,
-    password: hashedPassword,
-  });
-  if (newUser) {
-    res.status(200).send({ message: 'Succesfully created user' });
-  } else {
-    res.status(500).send({ message: 'Error while creating new User' });
+  try {
+    const newUser = await User.create({
+      name,
+      username,
+      password: hashedPassword,
+    });
+    if (newUser) {
+      res.status(200).send({ message: 'Succesfully created user' });
+    } else {
+      res.status(500).send({ message: 'Error while creating new User' });
+    }
+  } catch (error) {
+    if (error.name === 'MongoError' && error.code === 11000)
+      res.status(422).send({ message: 'username is not unique' });
+    else {
+      res.status(500).send({ message: error.message });
+    }
   }
 };
