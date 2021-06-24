@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextInput from './TextInput';
 import { validateUsername, validatePassword } from '../utils/validation';
 import { useTextField } from '../hooks/useTextField';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import ErrorMessage from './ErrorMessage';
 
 const SignInForm = () => {
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
   const authContext = useContext(AuthContext);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +20,11 @@ const SignInForm = () => {
     if (!isUsernameOk || !isPasswordOk) {
       return;
     }
-    await authContext.signIn(username.value, password.value);
+    try {
+      await authContext.signIn(username.value, password.value);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -42,7 +48,7 @@ const SignInForm = () => {
           inputId="password-login-input"
           error={password.error}
         />
-
+        <ErrorMessage message={error} />
         <button
           type="submit"
           className="bg-blue-500 p-3 hover:bg-blue-300 text-white rounded w-1/2 block font-medium mx-auto"

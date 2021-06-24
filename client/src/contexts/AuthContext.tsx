@@ -46,16 +46,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signIn = async (username: string, password: string) => {
-    try {
-      const response = await login(username, password);
-      if (response) {
-        api.defaults.headers['Authorization'] = `Bearer ${response.token}`;
-        window.localStorage.setItem('userToken', response.token);
-        setUser(response.user);
-        history.push('/');
-      }
-    } catch (error) {
-      console.error(error);
+    const response = await login(username, password);
+    if (response) {
+      api.defaults.headers['Authorization'] = `Bearer ${response.token}`;
+      window.localStorage.setItem('userToken', response.token);
+      setUser(response.user);
+      history.push('/');
     }
   };
 

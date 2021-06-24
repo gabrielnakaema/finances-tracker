@@ -14,14 +14,14 @@ export const login = async (
   username: string,
   password: string
 ): Promise<LoginResponseObject | void> => {
-  const response = await api.post(`/login`, {
-    username,
-    password,
-  });
-  if (response.data && response.status === 200) {
+  try {
+    const response = await api.post(`/login`, {
+      username,
+      password,
+    });
     return response.data as LoginResponseObject;
-  } else {
-    throw new Error(`${response.status}:${response.data.message}`);
+  } catch (error) {
+    throw new Error(error.response.data.message);
   }
 };
 
