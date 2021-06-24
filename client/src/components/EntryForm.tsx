@@ -10,6 +10,7 @@ import {
 } from '../utils/validation';
 import DatePicker from './DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Button from './Button';
 
 interface EntryFormProps {
   addNewEntry: (newEntry: NewEntry) => void;
@@ -187,13 +188,7 @@ const EntryForm = (props: EntryFormProps) => {
               error={recurringMonths.error}
             />
             <DatePicker date={date} onChange={handleDateChange} />
-            <button
-              id="create-button"
-              className="bg-blue-500 hover:bg-blue-300 p-3 text-white rounded w-1/2 block mx-auto font-medium"
-              type="submit"
-            >
-              Create
-            </button>
+            <Button type="submit">Submit</Button>
           </div>
         </form>
       </div>

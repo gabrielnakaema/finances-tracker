@@ -6,6 +6,7 @@ import addMonths from 'date-fns/addMonths';
 import CategoryIcon from './CategoryIcon';
 import { Entry } from '../types';
 import { CgTrash } from 'react-icons/cg';
+import Button from './Button';
 
 interface EntryListProps {
   data: Entry[];
@@ -46,21 +47,15 @@ const EntryList = (props: EntryListProps) => {
     <div className="flex flex-col flex-grow items-center text-left border-gray-100 border m-3 md:w-1/2">
       <h2 className="text-gray-700 font-bold m-3 mt-5">Entry List</h2>
       <div className="min-w-1/2 flex flex-row justify-between items-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-300 text-white px-4 py-1 rounded"
-          onClick={handleDecreaseMonth}
-        >
+        <Button onClick={handleDecreaseMonth} className="px-5 py-2">
           {'<'}
-        </button>
-        <span className="font-semibold px-1 text-gray-700">
+        </Button>
+        <span className="font-semibold px-1 text-gray-700 whitespace-nowrap">
           {format(filterDate, 'MMMM, yyyy')}
         </span>
-        <button
-          className="bg-blue-500 hover:bg-blue-300 text-white px-4 py-1 rounded"
-          onClick={handleIncreaseMonth}
-        >
+        <Button onClick={handleIncreaseMonth} className="px-5 py-2">
           {'>'}
-        </button>
+        </Button>
       </div>
       <h2 className="text-gray-700 font-bold m-3">
         Total : ${monthlyTotal.toFixed(2)}

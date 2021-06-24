@@ -4,6 +4,7 @@ import { SyntheticEvent, useState } from 'react';
 import { signUp } from '../services/auth';
 import { validateUsername, validatePassword } from '../utils/validation';
 import ErrorMessage from './ErrorMessage';
+import Button from './Button';
 
 const SignUpForm = () => {
   const name = useTextField('text', (text: string) =>
@@ -62,12 +63,7 @@ const SignUpForm = () => {
         labelText="Password"
       />
       <ErrorMessage message={error} />
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-300 p-3 text-white rounded w-1/2 block mx-auto font-medium"
-      >
-        Sign Up
-      </button>
+      <Button type="submit">Sign Up</Button>
     </form>
   );
 };

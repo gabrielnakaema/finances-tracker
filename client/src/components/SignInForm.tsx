@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import ErrorMessage from './ErrorMessage';
+import Button from './Button';
 
 const SignInForm = () => {
   const username = useTextField('text', validateUsername);
@@ -49,12 +50,7 @@ const SignInForm = () => {
           error={password.error}
         />
         <ErrorMessage message={error} />
-        <button
-          type="submit"
-          className="bg-blue-500 p-3 hover:bg-blue-300 text-white rounded w-1/2 block font-medium mx-auto"
-        >
-          Sign In
-        </button>
+        <Button type="submit">Sign In</Button>
       </form>
       <div className="text-center mt-5">
         <span className=" text-gray-700">Don't have an account ? </span>
