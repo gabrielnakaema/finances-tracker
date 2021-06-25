@@ -19,8 +19,12 @@ function App() {
   useEffect(() => {
     if (authContext.isSignedIn) {
       const fetchEntries = async () => {
-        const entries = (await fetchAllEntries()) as Entry[];
-        setData(entries);
+        try {
+          const entries = (await fetchAllEntries()) as Entry[];
+          setData(entries);
+        } catch (error) {
+          setError(error.message);
+        }
       };
       fetchEntries();
     }
@@ -38,7 +42,12 @@ function App() {
   }, [error]);
 
   const addNewEntry = async (newEntry: NewEntry): Promise<void> => {
-    const receivedEntry = await addEntry(newEntry);
+    let receivedEntry;
+    try {
+      receivedEntry = await addEntry(newEntry);
+    } catch (error) {
+      setError(error.message);
+    }
     if (receivedEntry) {
       if (data) {
         const newDataArray = [...data, receivedEntry];
@@ -53,19 +62,22 @@ function App() {
     const addedEntriesPromises = newEntries.map((newEntry) =>
       addEntry(newEntry)
     );
-    const addedEntries = await Promise.all(addedEntriesPromises);
-    setData([...data, ...addedEntries]);
+    try {
+      const addedEntries = await Promise.all(addedEntriesPromises);
+      setData([...data, ...addedEntries]);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm('do you really want to delete this entry ? ')) {
-      const status = await deleteEntry(id);
-      if (status === 200) {
+      try {
+        await deleteEntry(id);
         const updatedData = data.filter((entry) => entry._id !== id);
         setData(updatedData);
-      } else {
-        console.log('unable to delete');
-        return;
+      } catch (error) {
+        setError(error.message);
       }
     } else {
       return;
