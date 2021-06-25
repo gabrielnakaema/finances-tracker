@@ -1,18 +1,20 @@
 import { useState, useEffect, useContext } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { AuthContext } from './contexts/AuthContext';
 import Header from './components/Header';
 import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import EntryForm from './components/EntryForm';
 import EntryList from './components/EntryList';
+import PrivateRoute from './components/PrivateRoute';
 import { fetchAllEntries, addEntry, deleteEntry } from './services/entries';
 import { Entry, NewEntry } from './types';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
+import ErrorMessage from './components/ErrorMessage';
 
 function App() {
   const authContext = useContext(AuthContext);
   const [data, setData] = useState<Entry[]>([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (authContext.isSignedIn) {
@@ -23,6 +25,17 @@ function App() {
       fetchEntries();
     }
   }, [authContext]);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError('');
+      }, 3000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [error]);
 
   const addNewEntry = async (newEntry: NewEntry): Promise<void> => {
     const receivedEntry = await addEntry(newEntry);
@@ -59,16 +72,22 @@ function App() {
     }
   };
 
+  const changeError = (message: string) => {
+    setError(message);
+  };
+
   return (
     <>
       <Header />
+      <ErrorMessage message={error} />
       <Switch>
         <Route path="/signin">
-          <SignInForm />
+          <SignInForm changeError={changeError} />
         </Route>
         <Route path="/signup">
-          <SignUpForm />
+          <SignUpForm changeError={changeError} />
         </Route>
+        changeError
         <Route exact path="/">
           <Redirect to="/entries" />
         </Route>

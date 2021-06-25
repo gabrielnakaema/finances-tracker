@@ -1,20 +1,21 @@
 import { useTextField } from '../hooks/useTextField';
 import TextInput from './TextInput';
-import { SyntheticEvent, useState } from 'react';
 import { signUp } from '../services/auth';
 import { validateUsername, validatePassword } from '../utils/validation';
-import ErrorMessage from './ErrorMessage';
 import Button from './Button';
 
-const SignUpForm = () => {
+interface SignUpFormProps {
+  changeError: (message: string) => void;
+}
+
+const SignUpForm = (props: SignUpFormProps) => {
   const name = useTextField('text', (text: string) =>
     text ? '' : 'Must not be empty.'
   );
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
-  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isNameOk = !name.error && name.callValidation();
     const isUsernameOk = !username.error && username.callValidation();
@@ -32,7 +33,7 @@ const SignUpForm = () => {
       username.reset();
       password.reset();
     } catch (error) {
-      setError(error.message);
+      props.changeError(error.message);
     }
   };
 
@@ -62,7 +63,6 @@ const SignUpForm = () => {
         error={password.error}
         labelText="Password"
       />
-      <ErrorMessage message={error} />
       <Button type="submit">Sign Up</Button>
     </form>
   );
