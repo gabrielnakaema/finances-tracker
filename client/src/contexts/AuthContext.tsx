@@ -2,11 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { login, loginWithCache } from '../services/auth';
 import { api } from '../services/api';
-
-interface User {
-  name: string;
-  username: string;
-}
+import { User } from '../types';
 
 interface AuthContextInfo {
   isSignedIn: boolean;
