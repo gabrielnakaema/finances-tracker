@@ -22,7 +22,7 @@ const EntryForm = (props: EntryFormProps) => {
   const [category, setCategory] = useState<Categories>('other');
   const value = useTextField('text', validateEntryValue);
   const description = useTextField('text', validateDescription);
-  const recurringMonths = useTextField('number', validateRecurringMonths);
+  const recurringMonths = useTextField('number', validateRecurringMonths, '0');
   const [date, setDate] = useState(new Date());
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -64,7 +64,6 @@ const EntryForm = (props: EntryFormProps) => {
     if (numberOfRecurringMonths > 0) {
       const arrayOfNewEntries: NewEntry[] = [];
       let i;
-
       for (i = 0; i < numberOfRecurringMonths; i++) {
         arrayOfNewEntries.push({
           ...newEntry,
@@ -178,16 +177,25 @@ const EntryForm = (props: EntryFormProps) => {
                 </div>
               </div>
             </div>
-            <TextInput
-              value={recurringMonths.value}
-              onChange={recurringMonths.onChange}
-              type={recurringMonths.type}
-              onBlur={recurringMonths.onBlur}
-              inputId="recurring-months-input"
-              labelText="Months to repeat entry"
-              error={recurringMonths.error}
-            />
             <DatePicker date={date} onChange={handleDateChange} />
+            <div className="my-4 mx-3 text-center">
+              <span className="font-bold text-gray-700">Repeat for</span>
+
+              <input
+                type={recurringMonths.type}
+                className={`w-14 mx-1 bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight
+                focus:outline-none focus:bg-white sm:w-20 ${
+                  recurringMonths.error
+                    ? 'border-red-500 focus:border-red-500'
+                    : 'focus:border-blue-500'
+                }`}
+                value={recurringMonths.value}
+                onChange={recurringMonths.onChange}
+                defaultValue={0}
+                max="100"
+              />
+              <span className="font-bold text-gray-700">months.</span>
+            </div>
             <Button type="submit">Submit</Button>
           </div>
         </form>
