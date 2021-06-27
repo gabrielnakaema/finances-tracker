@@ -23,9 +23,6 @@ export const validateDescription = (text: string): string => {
 };
 
 export const validateRecurringMonths = (text: string): string => {
-  if (!text) {
-    return 'Must not be empty.';
-  }
   if (isNaN(Number(text))) {
     return 'Must be numeric.';
   }
