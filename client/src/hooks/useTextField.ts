@@ -12,9 +12,10 @@ interface TextFieldHookReturn {
 
 export const useTextField = (
   type: string,
-  validate: (text: string) => string
+  validate: (text: string) => string,
+  defaultValue?: string
 ): TextFieldHookReturn => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(defaultValue ? defaultValue : '');
   const [error, setError] = useState('');
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
