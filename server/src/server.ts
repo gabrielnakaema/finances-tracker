@@ -11,13 +11,16 @@ if (
   process.env.MONGO_INITDB_ROOT_USERNAME &&
   process.env.MONGO_INITDB_ROOT_PASSWORD
 ) {
-  mongoose.connect('mongodb://localhost:27017/finances', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    authSource: 'admin',
-    user: process.env.MONGO_INITDB_ROOT_USERNAME,
-    pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
-  });
+  mongoose.connect(
+    `mongodb+srv://${process.env.DB_HOST}/${process.env.MONGO_INITDB_DATABASE}`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      authSource: 'admin',
+      user: process.env.MONGO_INITDB_ROOT_USERNAME,
+      pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
+    }
+  );
 
   const db = mongoose.connection;
 
@@ -41,8 +44,10 @@ app.post('/register', create);
 
 app.post('/validatetoken', validate);
 
+const port = process.env.PORT || 3333;
+
 export const start = (): void => {
-  app.listen(3333, () => {
-    console.log('app running on port 3333');
+  app.listen(port, () => {
+    console.log(`app running on port ${port}`);
   });
 };
