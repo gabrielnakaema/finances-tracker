@@ -5,7 +5,7 @@ const apiPort = process.env.REACT_APP_API_PORT as string;
 const token = window.localStorage.getItem('userToken');
 
 export const api = axios.create({
-  baseURL: `http://${apiBaseUrl}:${apiPort}`,
+  baseURL: `https://${apiBaseUrl}:${apiPort}`,
 });
 
 if (token) {
