@@ -191,7 +191,6 @@ const EntryForm = (props: EntryFormProps) => {
                 }`}
                 value={recurringMonths.value}
                 onChange={recurringMonths.onChange}
-                defaultValue={0}
                 max="100"
               />
               <span className="font-bold text-gray-700">months.</span>
