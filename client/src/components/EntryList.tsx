@@ -57,6 +57,7 @@ const EntryList = (props: EntryListProps) => {
       {displayData ? (
         displayData.map((el) => (
           <EntryItem
+            key={el._id}
             id={el._id}
             value={el.value}
             description={el.description}

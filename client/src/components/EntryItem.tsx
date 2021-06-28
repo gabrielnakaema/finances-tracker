@@ -14,10 +14,7 @@ interface EntryItemProps {
 
 const EntryItem = (props: EntryItemProps) => {
   return (
-    <div
-      key={props.id}
-      className=" shadow-md m-1 w-4/5 border border-gray-300 rounded overflow-hidden"
-    >
+    <div className=" shadow-md m-1 w-4/5 border border-gray-300 rounded overflow-hidden">
       <div
         className={`flex flex-row h-full w-full m-0 p-1 border-l-4 ${
           props.type === 'income' ? 'border-green-700' : 'border-red-600'
