@@ -3,6 +3,7 @@ import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
 import isSameMonth from 'date-fns/isSameMonth';
 import addMonths from 'date-fns/addMonths';
+import compareAsc from 'date-fns/compareAsc';
 import Button from './Button';
 import EntryItem from './EntryItem';
 import { Entry } from '../types';
@@ -16,7 +17,12 @@ const EntryList = (props: EntryListProps) => {
   const [filterDate, setFilterDate] = useState<Date>(new Date());
 
   const displayData = useMemo(
-    () => props.data.filter((el) => isSameMonth(parseISO(el.date), filterDate)),
+    () =>
+      props.data
+        .filter((el) => isSameMonth(parseISO(el.date), filterDate))
+        .sort((prevEl, el) =>
+          compareAsc(parseISO(prevEl.date), parseISO(el.date))
+        ),
     [props.data, filterDate]
   );
 
