@@ -29,6 +29,16 @@ const SignInForm = (props: SignInFormProps) => {
     }
   };
 
+  const testLogin = async () => {
+    const USERNAME = process.env.REACT_APP_TESTING_USERNAME;
+    const PASSWORD = process.env.REACT_APP_TESTING_PASSWORD;
+    if (USERNAME && PASSWORD) {
+      await authContext.signIn(USERNAME, PASSWORD);
+    } else {
+      return;
+    }
+  };
+
   return (
     <div className="sm:w-1/2 sm:mx-auto lg:w-1/4">
       <form onSubmit={handleSubmit}>
@@ -52,6 +62,14 @@ const SignInForm = (props: SignInFormProps) => {
         />
         <Button type="submit">Sign In</Button>
       </form>
+      {process.env.REACT_APP_TESTING_USERNAME &&
+      process.env.REACT_APP_TESTING_PASSWORD ? (
+        <Button className="mt-1" onClick={testLogin}>
+          Sign in with demo user
+        </Button>
+      ) : (
+        <></>
+      )}
       <div className="text-center mt-5">
         <span className=" text-gray-700">Don't have an account ? </span>
         <Link className="text-blue-500 underline" to="/signup">
