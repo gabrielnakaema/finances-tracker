@@ -3,6 +3,7 @@ import TextInput from './TextInput';
 import { signUp } from '../services/auth';
 import { validateUsername, validatePassword } from '../utils/validation';
 import Button from './Button';
+import { useHistory } from 'react-router-dom';
 
 interface SignUpFormProps {
   changeError: (message: string) => void;
@@ -14,6 +15,7 @@ const SignUpForm = (props: SignUpFormProps) => {
   );
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
+  const history = useHistory();
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,6 +34,7 @@ const SignUpForm = (props: SignUpFormProps) => {
       name.reset();
       username.reset();
       password.reset();
+      history.push('/');
     } catch (error) {
       props.changeError(error.message);
     }

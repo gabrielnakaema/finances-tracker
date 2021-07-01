@@ -13,7 +13,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Button from './Button';
 
 interface EntryFormProps {
-  addNewEntry: (newEntry: NewEntry) => void;
   addEntries: (newEntries: NewEntry[]) => void;
 }
 
@@ -72,7 +71,7 @@ const EntryForm = (props: EntryFormProps) => {
       }
       props.addEntries(arrayOfNewEntries);
     } else {
-      props.addNewEntry(newEntry);
+      props.addEntries([newEntry]);
     }
     resetFormValues();
   };

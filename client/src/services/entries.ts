@@ -4,16 +4,25 @@ import { api } from './api';
 export const fetchAllEntries = async () => {
   try {
     const response = await api.get('/entries');
-    return response.data;
+    return response.data as Entry[];
   } catch (error) {
     throw new Error(error.response.data.message);
   }
 };
 
-export const addEntry = async (newEntry: NewEntry) => {
+export const postEntry = async (newEntry: NewEntry) => {
   try {
     const response = await api.post('/entries', newEntry);
     return response.data as Entry;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const postEntries = async (newEntries: NewEntry[]) => {
+  try {
+    const response = await api.post('/entries', newEntries);
+    return response.data as Entry[];
   } catch (error) {
     throw new Error(error.response.data.message);
   }

@@ -40,6 +40,9 @@ const create = async (
   req: RequestWithUserId,
   res: Response
 ): Promise<Response | void> => {
+  if (req.body instanceof Array) {
+    return createMany(req, res);
+  }
   const requiredFields = ['description', 'value', 'type', 'category'];
   for (const field of requiredFields) {
     if (!req.body[field]) {
@@ -61,6 +64,40 @@ const create = async (
   const receivedEntry = await Entry.create(newEntry);
   if (receivedEntry) {
     res.status(200).send(receivedEntry);
+  }
+};
+
+const createMany = async (
+  req: RequestWithUserId,
+  res: Response
+): Promise<Response | void> => {
+  const requiredFields = ['description', 'value', 'type', 'category'];
+  const newEntries: NewEntry[] = [];
+  const body = req.body as [];
+  for (let i = 0; i < body.length; i++) {
+    for (const field of requiredFields) {
+      if (!body[i][field]) {
+        return res
+          .status(400)
+          .send({ message: `missing param: ${field} in array index ${i}` });
+      }
+    }
+    const { description, value, type, category } = req.body[i];
+    const authorizedUserId = req.authorizedUserId as string;
+    newEntries.push({
+      description,
+      value,
+      type,
+      category,
+      date: req.body[i].date ? req.body[i].date : null,
+      createdBy: authorizedUserId,
+    });
+  }
+  try {
+    const receivedEntries = await Entry.create(newEntries);
+    res.status(200).send(receivedEntries);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
   }
 };
 
