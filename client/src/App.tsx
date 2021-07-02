@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useReducer } from 'react';
+import { useEffect, useContext, useReducer } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { AuthContext } from './contexts/AuthContext';
 import Header from './components/Header';
@@ -9,12 +9,13 @@ import EntryList from './components/EntryList';
 import PrivateRoute from './components/PrivateRoute';
 import { fetchAllEntries, postEntries, deleteEntry } from './services/entries';
 import { NewEntry } from './types';
-import ErrorMessage from './components/ErrorMessage';
+import NotificationMessage from './components/NotificationMessage';
 import { entriesReducer } from './reducers/entries';
+import { NotificationContext } from './contexts/NotificationContext';
 
 function App() {
   const authContext = useContext(AuthContext);
-  const [error, setError] = useState('');
+  const { notification, changeNotification } = useContext(NotificationContext);
   const [data, dispatch] = useReducer(entriesReducer, []);
 
   useEffect(() => {
@@ -27,23 +28,15 @@ function App() {
             payload: entries,
           });
         } catch (error) {
-          setError(error.message);
+          changeNotification({
+            type: 'error',
+            message: error.message,
+          });
         }
       };
       fetchEntries();
     }
-  }, [authContext]);
-
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError('');
-      }, 3000);
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [error]);
+  }, [authContext, changeNotification]);
 
   const addEntries = async (newEntries: NewEntry[]) => {
     try {
@@ -53,7 +46,10 @@ function App() {
         payload: response,
       });
     } catch (error) {
-      setError(error.message);
+      changeNotification({
+        type: 'error',
+        message: error.message,
+      });
     }
   };
 
@@ -68,7 +64,10 @@ function App() {
           },
         });
       } catch (error) {
-        setError(error.message);
+        changeNotification({
+          type: 'error',
+          message: error.message,
+        });
       }
     } else {
       return;
@@ -76,13 +75,16 @@ function App() {
   };
 
   const changeError = (message: string) => {
-    setError(message);
+    changeNotification({
+      type: 'error',
+      message,
+    });
   };
 
   return (
     <>
       <Header />
-      <ErrorMessage message={error} />
+      <NotificationMessage notification={notification} />
       <Switch>
         <Route path="/signin">
           <SignInForm changeError={changeError} />
