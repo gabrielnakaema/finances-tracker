@@ -90,7 +90,6 @@ function App() {
         <Route path="/signup">
           <SignUpForm changeError={changeError} />
         </Route>
-        changeError
         <Route exact path="/">
           <Redirect to="/entries" />
         </Route>
