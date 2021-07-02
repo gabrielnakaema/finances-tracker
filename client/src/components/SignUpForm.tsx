@@ -4,18 +4,17 @@ import { signUp } from '../services/auth';
 import { validateUsername, validatePassword } from '../utils/validation';
 import Button from './Button';
 import { useHistory } from 'react-router-dom';
+import { useContext } from 'react';
+import { NotificationContext } from '../contexts/NotificationContext';
 
-interface SignUpFormProps {
-  changeError: (message: string) => void;
-}
-
-const SignUpForm = (props: SignUpFormProps) => {
+const SignUpForm = () => {
   const name = useTextField('text', (text: string) =>
     text ? '' : 'Must not be empty.'
   );
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
   const history = useHistory();
+  const { changeNotification } = useContext(NotificationContext);
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,12 +30,19 @@ const SignUpForm = (props: SignUpFormProps) => {
         username: username.value,
         password: password.value,
       });
+      changeNotification({
+        type: 'ok',
+        message: 'Succesfully created user, please sign in !',
+      });
       name.reset();
       username.reset();
       password.reset();
       history.push('/');
     } catch (error) {
-      props.changeError(error.message);
+      changeNotification({
+        type: 'error',
+        message: error.message,
+      });
     }
   };
 

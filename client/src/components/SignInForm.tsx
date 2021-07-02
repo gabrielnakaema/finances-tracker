@@ -3,17 +3,15 @@ import { validateUsername, validatePassword } from '../utils/validation';
 import { useTextField } from '../hooks/useTextField';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { NotificationContext } from '../contexts/NotificationContext';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 
-interface SignInFormProps {
-  changeError: (message: string) => void;
-}
-
-const SignInForm = (props: SignInFormProps) => {
+const SignInForm = () => {
   const username = useTextField('text', validateUsername);
   const password = useTextField('password', validatePassword);
   const authContext = useContext(AuthContext);
+  const { changeNotification } = useContext(NotificationContext);
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,7 +23,10 @@ const SignInForm = (props: SignInFormProps) => {
     try {
       await authContext.signIn(username.value, password.value);
     } catch (error) {
-      props.changeError(error.message);
+      changeNotification({
+        type: 'error',
+        message: error.message,
+      });
     }
   };
 
@@ -36,7 +37,10 @@ const SignInForm = (props: SignInFormProps) => {
       try {
         await authContext.signIn(USERNAME, PASSWORD);
       } catch (error) {
-        props.changeError(error.message);
+        changeNotification({
+          type: 'error',
+          message: error.message,
+        });
       }
     } else {
       return;

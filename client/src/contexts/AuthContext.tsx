@@ -27,7 +27,7 @@ export const AuthContext = createContext({} as AuthContextInfo);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const history = useHistory();
-  const notificationContext = useContext(NotificationContext);
+  const { changeNotification } = useContext(NotificationContext);
   const isSignedIn = !!user;
   useEffect(() => {
     const signInFromCache = async () => {
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           }
         } catch (error) {
           window.localStorage.setItem('userToken', '');
-          notificationContext.changeNotification({
+          changeNotification({
             type: 'error',
             message: error.message,
           });

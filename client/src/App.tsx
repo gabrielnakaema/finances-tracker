@@ -45,6 +45,10 @@ function App() {
         type: 'ADD_ENTRIES',
         payload: response,
       });
+      changeNotification({
+        type: 'ok',
+        message: 'Entry added succesfully.',
+      });
     } catch (error) {
       changeNotification({
         type: 'error',
@@ -63,6 +67,10 @@ function App() {
             entryId: id,
           },
         });
+        changeNotification({
+          type: 'ok',
+          message: 'Entry deleted succesfully.',
+        });
       } catch (error) {
         changeNotification({
           type: 'error',
@@ -74,23 +82,16 @@ function App() {
     }
   };
 
-  const changeError = (message: string) => {
-    changeNotification({
-      type: 'error',
-      message,
-    });
-  };
-
   return (
     <>
       <Header />
       <NotificationMessage notification={notification} />
       <Switch>
         <Route path="/signin">
-          <SignInForm changeError={changeError} />
+          <SignInForm />
         </Route>
         <Route path="/signup">
-          <SignUpForm changeError={changeError} />
+          <SignUpForm />
         </Route>
         <Route exact path="/">
           <Redirect to="/entries" />
