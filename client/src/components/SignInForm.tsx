@@ -33,7 +33,11 @@ const SignInForm = (props: SignInFormProps) => {
     const USERNAME = process.env.REACT_APP_TESTING_USERNAME;
     const PASSWORD = process.env.REACT_APP_TESTING_PASSWORD;
     if (USERNAME && PASSWORD) {
-      await authContext.signIn(USERNAME, PASSWORD);
+      try {
+        await authContext.signIn(USERNAME, PASSWORD);
+      } catch (error) {
+        props.changeError(error.message);
+      }
     } else {
       return;
     }
