@@ -1,5 +1,12 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useState,
+  useContext,
+} from 'react';
 import { useHistory } from 'react-router-dom';
+import { NotificationContext } from './NotificationContext';
 import { login, loginWithCache } from '../services/auth';
 import { api } from '../services/api';
 import { User } from '../types';
@@ -20,6 +27,7 @@ export const AuthContext = createContext({} as AuthContextInfo);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const history = useHistory();
+  const notificationContext = useContext(NotificationContext);
   const isSignedIn = !!user;
   useEffect(() => {
     const signInFromCache = async () => {
@@ -33,7 +41,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           }
         } catch (error) {
           window.localStorage.setItem('userToken', '');
-          console.log(error);
+          notificationContext.changeNotification({
+            type: 'error',
+            message: error.message,
+          });
         }
       }
     };
