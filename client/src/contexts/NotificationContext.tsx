@@ -5,16 +5,11 @@ import {
   useCallback,
   useEffect,
 } from 'react';
+import { Notification } from '../types';
 
 interface NotificationContextInfo {
   notification: Notification;
   changeNotification: (notification: Notification) => void;
-}
-
-interface Notification {
-  type: 'ok' | 'error';
-  statusCode?: number;
-  message: string;
 }
 
 interface NotificationProviderProps {

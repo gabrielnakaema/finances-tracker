@@ -43,3 +43,9 @@ export interface User {
   name: string;
   username: string;
 }
+
+export interface Notification {
+  type: 'ok' | 'error';
+  statusCode?: number;
+  message: string;
+}
