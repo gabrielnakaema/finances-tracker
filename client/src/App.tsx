@@ -1,4 +1,4 @@
-import { useEffect, useContext, useReducer } from 'react';
+import { useEffect, useContext, useReducer, useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { AuthContext } from './contexts/AuthContext';
 import Header from './components/Header';
@@ -17,6 +17,7 @@ function App() {
   const authContext = useContext(AuthContext);
   const { notification, changeNotification } = useContext(NotificationContext);
   const [data, dispatch] = useReducer(entriesReducer, []);
+  const [areEntriesLoading, setAreEntriesLoading] = useState(true);
 
   useEffect(() => {
     if (authContext.isSignedIn) {
@@ -27,6 +28,9 @@ function App() {
             type: 'SET_ENTRIES',
             payload: entries,
           });
+          if (areEntriesLoading) {
+            setAreEntriesLoading(false);
+          }
         } catch (error) {
           changeNotification({
             type: 'error',
@@ -36,7 +40,7 @@ function App() {
       };
       fetchEntries();
     }
-  }, [authContext, changeNotification]);
+  }, [authContext, changeNotification, areEntriesLoading]);
 
   const addEntries = async (newEntries: NewEntry[]) => {
     try {
@@ -88,7 +92,7 @@ function App() {
       <NotificationMessage notification={notification} />
       <Switch>
         <Route path="/signin">
-          <SignInForm />
+          {authContext.isSignedIn ? <Redirect to="/entries" /> : <SignInForm />}
         </Route>
         <Route path="/signup">
           <SignUpForm />
@@ -99,7 +103,11 @@ function App() {
         <PrivateRoute path="/entries">
           <div className="flex flex-col md:flex-row-reverse">
             <EntryForm addEntries={addEntries} />
-            <EntryList data={data} handleDelete={handleDelete} />
+            <EntryList
+              data={data}
+              handleDelete={handleDelete}
+              isLoading={areEntriesLoading}
+            />
           </div>
         </PrivateRoute>
       </Switch>

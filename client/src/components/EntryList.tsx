@@ -7,10 +7,12 @@ import compareAsc from 'date-fns/compareAsc';
 import Button from './Button';
 import EntryItem from './EntryItem';
 import { Entry } from '../types';
+import LoadingSpinner from './LoadingSpinner';
 
 interface EntryListProps {
   data: Entry[];
   handleDelete: (id: string) => void;
+  isLoading: boolean;
 }
 
 const EntryList = (props: EntryListProps) => {
@@ -60,7 +62,9 @@ const EntryList = (props: EntryListProps) => {
       <h2 className="text-gray-700 font-bold m-3">
         Total : ${monthlyTotal.toFixed(2)}
       </h2>
-      {displayData ? (
+      {props.isLoading ? (
+        <LoadingSpinner />
+      ) : (
         displayData.map((el) => (
           <EntryItem
             key={el._id}
@@ -73,8 +77,6 @@ const EntryList = (props: EntryListProps) => {
             deleteEntry={() => props.handleDelete(el._id)}
           />
         ))
-      ) : (
-        <></>
       )}
     </div>
   );
