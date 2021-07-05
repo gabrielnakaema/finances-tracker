@@ -12,22 +12,29 @@ import { NewEntry } from './types';
 import NotificationMessage from './components/NotificationMessage';
 import { entriesReducer } from './reducers/entries';
 import { NotificationContext } from './contexts/NotificationContext';
+import LoadingSpinner from './components/LoadingSpinner';
 
 function App() {
   const authContext = useContext(AuthContext);
   const { notification, changeNotification } = useContext(NotificationContext);
   const [data, dispatch] = useReducer(entriesReducer, []);
   const [areEntriesLoading, setAreEntriesLoading] = useState(true);
+  const [isCheckingCache, setIsCheckingCache] = useState(true);
 
   useEffect(() => {
-    try {
-      authContext.signInFromCache();
-    } catch (error) {
-      changeNotification({
-        type: 'error',
-        message: error.message,
-      });
-    }
+    const signInWithCache = async () => {
+      try {
+        await authContext.signInFromCache();
+      } catch (error) {
+        changeNotification({
+          type: 'error',
+          message: error.message,
+        });
+      } finally {
+        setIsCheckingCache(false);
+      }
+    };
+    signInWithCache();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -99,31 +106,38 @@ function App() {
   };
 
   return (
-    <>
+    <div className="h-screen">
       <Header />
       <NotificationMessage notification={notification} />
-      <Switch>
-        <Route path="/signin">
-          {authContext.user ? <Redirect to="/entries" /> : <SignInForm />}
-        </Route>
-        <Route path="/signup">
-          <SignUpForm />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/entries" />
-        </Route>
-        <PrivateRoute path="/entries">
-          <div className="flex flex-col md:flex-row-reverse">
-            <EntryForm addEntries={addEntries} />
-            <EntryList
-              data={data}
-              handleDelete={handleDelete}
-              isLoading={areEntriesLoading}
-            />
-          </div>
-        </PrivateRoute>
-      </Switch>
-    </>
+      {isCheckingCache ? (
+        <div className="flex flex-col items-center justify-center h-full">
+          <LoadingSpinner className="sm:w-24 sm:h-24" />
+          Loading...
+        </div>
+      ) : (
+        <Switch>
+          <Route path="/signin">
+            {authContext.user ? <Redirect to="/entries" /> : <SignInForm />}
+          </Route>
+          <Route path="/signup">
+            <SignUpForm />
+          </Route>
+          <Route exact path="/">
+            <Redirect to="/entries" />
+          </Route>
+          <PrivateRoute path="/entries">
+            <div className="flex flex-col md:flex-row-reverse">
+              <EntryForm addEntries={addEntries} />
+              <EntryList
+                data={data}
+                handleDelete={handleDelete}
+                isLoading={areEntriesLoading}
+              />
+            </div>
+          </PrivateRoute>
+        </Switch>
+      )}
+    </div>
   );
 }
 
