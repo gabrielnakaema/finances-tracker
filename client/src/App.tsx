@@ -20,7 +20,19 @@ function App() {
   const [areEntriesLoading, setAreEntriesLoading] = useState(true);
 
   useEffect(() => {
-    if (authContext.isSignedIn) {
+    try {
+      authContext.signInFromCache();
+    } catch (error) {
+      changeNotification({
+        type: 'error',
+        message: error.message,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (authContext.user) {
       const fetchEntries = async () => {
         try {
           const entries = await fetchAllEntries();
@@ -92,7 +104,7 @@ function App() {
       <NotificationMessage notification={notification} />
       <Switch>
         <Route path="/signin">
-          {authContext.isSignedIn ? <Redirect to="/entries" /> : <SignInForm />}
+          {authContext.user ? <Redirect to="/entries" /> : <SignInForm />}
         </Route>
         <Route path="/signup">
           <SignUpForm />

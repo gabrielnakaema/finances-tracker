@@ -13,7 +13,7 @@ const PrivateRoute = (props: PrivateRouteProps) => {
     <Route
       path={props.path}
       render={({ location }) => {
-        if (auth.isSignedIn) {
+        if (auth.user) {
           return props.children;
         } else {
           return (

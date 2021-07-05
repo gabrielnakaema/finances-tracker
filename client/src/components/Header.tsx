@@ -17,7 +17,7 @@ const Header = () => {
       <Link to="/">
         <h1 className="font-bold text-white tracking-wide">Finances Tracker</h1>
       </Link>
-      {authContext.isSignedIn ? (
+      {authContext.user ? (
         <HeaderUser user={authContext.user} handleSignOut={handleSignOut} />
       ) : (
         <></>
