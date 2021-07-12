@@ -1,8 +1,8 @@
 import express from 'express';
+import cors from 'cors';
 import { entriesRouter } from './routes/entries';
 import { login, validate } from './controllers/login';
 import { create } from './controllers/user';
-import cors from 'cors';
 import { errorHandling } from './utils/middleware';
 import { resolver } from './utils/resolver';
 
@@ -16,7 +16,7 @@ app.use('/entries', entriesRouter);
 
 app.post('/login', resolver(login));
 
-app.post('/register', create);
+app.post('/register', resolver(create));
 
 app.post('/validatetoken', validate);
 
