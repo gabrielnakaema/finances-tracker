@@ -5,24 +5,29 @@ import {
   signToken,
   validateToken,
 } from '../utils/auth';
+import {
+  BadRequestError,
+  InternalServerError,
+  UnauthorizedError,
+} from '../utils/errors';
 
 export const login = async (
   req: Request,
   res: Response
 ): Promise<Response | void> => {
   if (!process.env.SECRET) {
-    return res.status(500).send({ message: 'internal server error' });
+    throw new InternalServerError('Secret Token not Found');
   }
   if (!req.body.username) {
-    return res.status(401).send({ message: 'missing username' });
+    throw new BadRequestError('missing param: username');
   }
   if (!req.body.password) {
-    return res.status(401).send({ message: 'missing password' });
+    throw new BadRequestError('missing param: password');
   }
   const { username, password } = req.body;
   const foundUser = await User.findOne({ username });
   if (!foundUser) {
-    return res.status(401).send({ message: 'username does not exist' });
+    throw new UnauthorizedError('wrong credentials');
   }
   const doesPasswordMatch = await checkPasswordEqualToHash(
     password,
@@ -31,7 +36,7 @@ export const login = async (
 
   if (doesPasswordMatch) {
     const token = signToken(foundUser._id);
-    return res.status(200).send({
+    res.status(200).send({
       token,
       user: {
         name: foundUser.name,
@@ -39,7 +44,7 @@ export const login = async (
       },
     });
   } else {
-    return res.status(401).send({ message: 'wrong credentials' });
+    throw new UnauthorizedError('wrong credentials');
   }
 };
 
@@ -48,37 +53,23 @@ export const validate = async (
   res: Response
 ): Promise<Response | void> => {
   if (!req.body.token) {
-    return res.status(400).send({ message: 'token missing' });
+    throw new BadRequestError('missing token from request header');
   }
-  let userId: string | undefined;
-  try {
-    userId = validateToken(req.body.token);
-  } catch (error) {
-    return res.status(401).send({ message: error.message });
-  }
-
+  const userId: string | undefined = validateToken(req.body.token);
   if (userId) {
-    try {
-      const foundUser = await User.findOne({ _id: userId });
-      if (foundUser) {
-        return res.status(200).send({
-          token: req.body.token,
-          user: {
-            name: foundUser.name,
-            username: foundUser.username,
-          },
-        });
-      } else {
-        return res
-          .status(401)
-          .send({ message: 'user with sent token not found' });
-      }
-    } catch (error) {
-      return res
-        .status(401)
-        .send({ message: 'user with sent token not found' });
+    const foundUser = await User.findOne({ _id: userId });
+    if (foundUser) {
+      return res.status(200).send({
+        token: req.body.token,
+        user: {
+          name: foundUser.name,
+          username: foundUser.username,
+        },
+      });
+    } else {
+      throw new UnauthorizedError('user with sent token not found');
     }
   } else {
-    res.status(401).send({ message: 'unauthorized token' });
+    throw new UnauthorizedError('token is invalid');
   }
 };
