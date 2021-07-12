@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { InternalServerError, UnauthorizedError } from './errors';
 import { ApiError, IApiError } from './errors/api-error';
 
 export interface RequestWithUserId extends Request {
@@ -16,27 +17,27 @@ export const authorizeUser = (
   next: NextFunction
 ): Response | void => {
   if (!process.env.SECRET) {
-    return res.status(500).send({ message: 'internal server error' });
+    throw new InternalServerError('secret token missing in server config');
   }
 
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return res
-      .status(401)
-      .send({ message: 'User is not authorized, no authorization header' });
+    throw new UnauthorizedError('missing authorization header');
   }
 
-  if (!authorization?.startsWith('Bearer')) {
-    return res.status(401).send({
-      message: 'User is not authorized, invalid authorization header',
-    });
+  if (!authorization.startsWith('Bearer ')) {
+    throw new UnauthorizedError(
+      'Invalid authorization header: authorization header must contain Bearer token'
+    );
   }
 
   const split = authorization.split('Bearer ');
 
   if (split.length !== 2) {
-    return res.status(401).send({ message: 'Invalid authorization header' });
+    throw new UnauthorizedError(
+      'Invalid authorization header: missing token after Bearer prefix'
+    );
   }
 
   const token = split[1];
@@ -47,9 +48,9 @@ export const authorizeUser = (
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      return res.status(401).send({ message: 'token is expired' });
+      throw new UnauthorizedError('Provided token is expired');
     } else {
-      return res.status(401).send({ message: error.message });
+      throw new UnauthorizedError(error.message);
     }
   }
 };
