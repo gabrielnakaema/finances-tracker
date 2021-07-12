@@ -1,20 +1,21 @@
 import { Router } from 'express';
 import { authorizeUser, checkRequestUserId } from '../utils/middleware';
 import { entryController } from '../controllers/entry';
+import { resolver } from '../utils/resolver';
 
 export const entriesRouter = Router();
 
-entriesRouter.use(authorizeUser);
+entriesRouter.use(resolver(authorizeUser));
 
-entriesRouter.use(checkRequestUserId);
+entriesRouter.use(resolver(checkRequestUserId));
 
 entriesRouter
   .route('/:id')
-  .get(entryController.getOne)
-  .put(entryController.update)
-  .delete(entryController.remove);
+  .get(resolver(entryController.getOne))
+  .put(resolver(entryController.update))
+  .delete(resolver(entryController.remove));
 
 entriesRouter
   .route('/')
-  .get(entryController.getAll)
-  .post(entryController.create);
+  .get(resolver(entryController.getAll))
+  .post(resolver(entryController.create));

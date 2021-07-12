@@ -1,5 +1,11 @@
 import { Response } from 'express';
 import { Entry } from '../models/entry';
+import {
+  BadRequestError,
+  InternalServerError,
+  NotFoundError,
+  UnprocessableEntityError,
+} from '../utils/errors';
 import { RequestWithUserId } from '../utils/middleware';
 
 interface NewEntry {
@@ -23,7 +29,7 @@ const getOne = async (
 ): Promise<Response | void> => {
   const authorizedUserId = req.authorizedUserId;
   if (!req.params.id) {
-    return res.status(400).send({ message: 'missing param: id' });
+    throw new BadRequestError('missing param: id');
   }
   const foundEntry = await Entry.findOne({
     createdBy: authorizedUserId,
@@ -32,7 +38,7 @@ const getOne = async (
   if (foundEntry) {
     res.status(200).send(foundEntry);
   } else {
-    res.status(404).send({ message: 'entry not found' });
+    throw new NotFoundError('entry with this id not found');
   }
 };
 
@@ -46,7 +52,7 @@ const create = async (
   const requiredFields = ['description', 'value', 'type', 'category'];
   for (const field of requiredFields) {
     if (!req.body[field]) {
-      return res.status(400).send({ message: `missing param: ${field}` });
+      throw new BadRequestError(`missing param: ${field}`);
     }
   }
   const { description, value, type, category } = req.body;
@@ -61,9 +67,27 @@ const create = async (
   if (req.body.date) {
     newEntry.date = req.body.date;
   }
-  const receivedEntry = await Entry.create(newEntry);
-  if (receivedEntry) {
-    res.status(200).send(receivedEntry);
+  try {
+    const receivedEntry = await Entry.create(newEntry);
+    if (receivedEntry) {
+      res.status(200).send(receivedEntry);
+    }
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      if (error.errors) {
+        let errorToSend = '';
+        for (const field in error.errors) {
+          errorToSend = errorToSend + error.errors[field].message + '\\n';
+        }
+        throw new UnprocessableEntityError(errorToSend);
+      } else {
+        throw new UnprocessableEntityError(
+          'validation error on entry creation'
+        );
+      }
+    } else {
+      throw new InternalServerError('unexpected error while creating entry');
+    }
   }
 };
 
@@ -77,9 +101,9 @@ const createMany = async (
   for (let i = 0; i < body.length; i++) {
     for (const field of requiredFields) {
       if (!body[i][field]) {
-        return res
-          .status(400)
-          .send({ message: `missing param: ${field} in array index ${i}` });
+        throw new BadRequestError(
+          `missing param: ${field} in array index ${i}`
+        );
       }
     }
     const { description, value, type, category } = req.body[i];
@@ -97,7 +121,21 @@ const createMany = async (
     const receivedEntries = await Entry.create(newEntries);
     res.status(200).send(receivedEntries);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    if (error.name === 'ValidationError') {
+      if (error.errors) {
+        let errorToSend = '';
+        for (const field in error.errors) {
+          errorToSend = errorToSend + error.errors[field].message + '\\n';
+        }
+        throw new UnprocessableEntityError(errorToSend);
+      } else {
+        throw new UnprocessableEntityError(
+          'validation error on entry creation'
+        );
+      }
+    } else {
+      throw new InternalServerError('unexpected error while creating entry');
+    }
   }
 };
 
@@ -108,11 +146,8 @@ const update = async (
   const requiredFields = ['description', 'value', 'type', 'category'];
   for (const field of requiredFields) {
     if (!req.body[field]) {
-      return res.status(400).send({ message: `missing param: ${field}` });
+      throw new BadRequestError(`missing param: ${field}`);
     }
-  }
-  if (!req.params.id) {
-    return res.status(400).send({ message: 'missing route param: id' });
   }
   const authorizedUserId = req.authorizedUserId;
 
@@ -127,14 +162,28 @@ const update = async (
     foundEntry.value = value;
     foundEntry.type = type;
     foundEntry.category = category;
-    const updatedEntry = await foundEntry.save();
-    if (updatedEntry) {
+    try {
+      const updatedEntry = await foundEntry.save();
       res.status(200).send(updatedEntry);
-    } else {
-      return res.status(500).send({ message: 'could not update entry' });
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        if (error.errors) {
+          let errorToSend = '';
+          for (const field in error.errors) {
+            errorToSend = errorToSend + error.errors[field].message + '\\n';
+          }
+          throw new UnprocessableEntityError(errorToSend);
+        } else {
+          throw new UnprocessableEntityError(
+            'validation error on entry creation'
+          );
+        }
+      } else {
+        throw new InternalServerError('unexpected error while updating entry');
+      }
     }
   } else {
-    return res.status(400).send({ message: 'invalid entry id' });
+    throw new NotFoundError('Entry with supplied id not found');
   }
 };
 
@@ -142,11 +191,7 @@ const remove = async (
   req: RequestWithUserId,
   res: Response
 ): Promise<Response | void> => {
-  if (!req.params.id) {
-    return res.status(400).send({ message: 'missing route param: id' });
-  }
   const authorizedUserId = req.authorizedUserId;
-
   const deletedEntry = await Entry.findOneAndDelete({
     _id: req.params.id,
     createdBy: authorizedUserId,
@@ -154,7 +199,9 @@ const remove = async (
   if (deletedEntry) {
     res.status(200).send({ message: 'successfully deleted entry' });
   } else {
-    return res.status(500).send({ message: 'could not delete entry' });
+    throw new NotFoundError(
+      'entry with provided id was not found to be deleted'
+    );
   }
 };
 
