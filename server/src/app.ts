@@ -18,7 +18,7 @@ app.post('/login', resolver(login));
 
 app.post('/register', resolver(create));
 
-app.post('/validatetoken', validate);
+app.post('/validatetoken', resolver(validate));
 
 app.use(errorHandling);
 
