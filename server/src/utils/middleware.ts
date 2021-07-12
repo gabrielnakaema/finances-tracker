@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { ApiError, IApiError } from './errors/api-error';
 
 export interface RequestWithUserId extends Request {
   authorizedUserId?: string;
@@ -62,4 +63,20 @@ export const checkRequestUserId = (
     return res.status(500).send({ message: 'internal server error' });
   }
   next();
+};
+
+export const errorHandling = (
+  err: IApiError,
+  req: Request,
+  res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction
+): void => {
+  if (err) {
+    if (err instanceof ApiError) {
+      res.status(err.statusCode).send({ name: err.name, message: err.message });
+    } else {
+      res.status(500).send({ message: err.message });
+    }
+  }
 };
