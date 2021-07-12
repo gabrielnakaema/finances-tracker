@@ -108,7 +108,9 @@ function App() {
   return (
     <div className="h-screen">
       <Header />
-      <NotificationMessage notification={notification} />
+      <div className="absolute z-100 min-w-full w-full">
+        <NotificationMessage notification={notification} />
+      </div>
       {isCheckingCache ? (
         <div className="flex flex-col items-center justify-center h-full">
           <LoadingSpinner className="sm:w-24 sm:h-24" />
