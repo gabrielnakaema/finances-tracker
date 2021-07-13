@@ -1,12 +1,8 @@
 import { Response } from 'express';
 import { Entry } from '../models/entry';
-import {
-  BadRequestError,
-  InternalServerError,
-  NotFoundError,
-  UnprocessableEntityError,
-} from '../utils/errors';
+import { BadRequestError, NotFoundError } from '../utils/errors';
 import { RequestWithUserId } from '../utils/middleware';
+import { validateFieldsExistence } from '../utils/validation';
 
 interface NewEntry {
   description: string;
@@ -16,6 +12,8 @@ interface NewEntry {
   date?: string;
   createdBy: string;
 }
+
+const REQUIRED_ENTRY_FIELDS = ['description', 'value', 'type', 'category'];
 
 const getAll = async (req: RequestWithUserId, res: Response): Promise<void> => {
   const authorizedUserId = req.authorizedUserId;
@@ -49,12 +47,15 @@ const create = async (
   if (req.body instanceof Array) {
     return createMany(req, res);
   }
-  const requiredFields = ['description', 'value', 'type', 'category'];
-  for (const field of requiredFields) {
-    if (!req.body[field]) {
-      throw new BadRequestError(`missing param: ${field}`);
-    }
+
+  const missingFields = validateFieldsExistence(
+    req.body,
+    REQUIRED_ENTRY_FIELDS
+  );
+  if (missingFields.length > 0) {
+    throw new BadRequestError(`missing field(s): ${missingFields}`);
   }
+
   const { description, value, type, category } = req.body;
   const authorizedUserId = req.authorizedUserId as string;
   const newEntry: NewEntry = {
@@ -67,27 +68,10 @@ const create = async (
   if (req.body.date) {
     newEntry.date = req.body.date;
   }
-  try {
-    const receivedEntry = await Entry.create(newEntry);
-    if (receivedEntry) {
-      res.status(200).send(receivedEntry);
-    }
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      if (error.errors) {
-        let errorToSend = '';
-        for (const field in error.errors) {
-          errorToSend = errorToSend + error.errors[field].message + '\\n';
-        }
-        throw new UnprocessableEntityError(errorToSend);
-      } else {
-        throw new UnprocessableEntityError(
-          'validation error on entry creation'
-        );
-      }
-    } else {
-      throw new InternalServerError('unexpected error while creating entry');
-    }
+
+  const receivedEntry = await Entry.create(newEntry);
+  if (receivedEntry) {
+    res.status(200).send(receivedEntry);
   }
 };
 
@@ -95,16 +79,17 @@ const createMany = async (
   req: RequestWithUserId,
   res: Response
 ): Promise<Response | void> => {
-  const requiredFields = ['description', 'value', 'type', 'category'];
   const newEntries: NewEntry[] = [];
   const body = req.body as [];
   for (let i = 0; i < body.length; i++) {
-    for (const field of requiredFields) {
-      if (!body[i][field]) {
-        throw new BadRequestError(
-          `missing param: ${field} in array index ${i}`
-        );
-      }
+    const missingFields = validateFieldsExistence(
+      req.body,
+      REQUIRED_ENTRY_FIELDS
+    );
+    if (missingFields.length > 0) {
+      throw new BadRequestError(
+        `missing field(s): ${missingFields} in entry index ${i}`
+      );
     }
     const { description, value, type, category } = req.body[i];
     const authorizedUserId = req.authorizedUserId as string;
@@ -117,37 +102,20 @@ const createMany = async (
       createdBy: authorizedUserId,
     });
   }
-  try {
-    const receivedEntries = await Entry.create(newEntries);
-    res.status(200).send(receivedEntries);
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      if (error.errors) {
-        let errorToSend = '';
-        for (const field in error.errors) {
-          errorToSend = errorToSend + error.errors[field].message + '\\n';
-        }
-        throw new UnprocessableEntityError(errorToSend);
-      } else {
-        throw new UnprocessableEntityError(
-          'validation error on entry creation'
-        );
-      }
-    } else {
-      throw new InternalServerError('unexpected error while creating entry');
-    }
-  }
+  const receivedEntries = await Entry.create(newEntries);
+  res.status(200).send(receivedEntries);
 };
 
 const update = async (
   req: RequestWithUserId,
   res: Response
 ): Promise<Response | void> => {
-  const requiredFields = ['description', 'value', 'type', 'category'];
-  for (const field of requiredFields) {
-    if (!req.body[field]) {
-      throw new BadRequestError(`missing param: ${field}`);
-    }
+  const missingFields = validateFieldsExistence(
+    req.body,
+    REQUIRED_ENTRY_FIELDS
+  );
+  if (missingFields.length > 0) {
+    throw new BadRequestError(`missing field(s): ${missingFields}`);
   }
   const authorizedUserId = req.authorizedUserId;
 
@@ -162,26 +130,8 @@ const update = async (
     foundEntry.value = value;
     foundEntry.type = type;
     foundEntry.category = category;
-    try {
-      const updatedEntry = await foundEntry.save();
-      res.status(200).send(updatedEntry);
-    } catch (error) {
-      if (error.name === 'ValidationError') {
-        if (error.errors) {
-          let errorToSend = '';
-          for (const field in error.errors) {
-            errorToSend = errorToSend + error.errors[field].message + '\\n';
-          }
-          throw new UnprocessableEntityError(errorToSend);
-        } else {
-          throw new UnprocessableEntityError(
-            'validation error on entry creation'
-          );
-        }
-      } else {
-        throw new InternalServerError('unexpected error while updating entry');
-      }
-    }
+    const updatedEntry = await foundEntry.save();
+    res.status(200).send(updatedEntry);
   } else {
     throw new NotFoundError('Entry with supplied id not found');
   }

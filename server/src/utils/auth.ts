@@ -1,10 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import {
-  BadRequestError,
-  InternalServerError,
-  UnauthorizedError,
-} from './errors';
+import { BadRequestError, InternalServerError } from './errors';
 
 export const hashPassword = async (textPassword: string): Promise<string> => {
   const saltRounds = 10;
@@ -41,20 +37,12 @@ export const validateToken = (tokenToValidate: string): string | undefined => {
   if (!SECRET_KEY) {
     throw new InternalServerError('secret key is missing in server config');
   }
-  try {
-    const decoded = jwt.verify(tokenToValidate, SECRET_KEY) as
-      | DecodedValidationObject
-      | undefined;
-    if (decoded) {
-      return decoded.userId;
-    } else {
-      throw new InternalServerError('decoded token is empty');
-    }
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      throw new UnauthorizedError('sent token is expired');
-    } else {
-      throw new UnauthorizedError('error during token validation');
-    }
+  const decoded = jwt.verify(tokenToValidate, SECRET_KEY) as
+    | DecodedValidationObject
+    | undefined;
+  if (decoded) {
+    return decoded.userId;
+  } else {
+    throw new InternalServerError('decoded token is empty');
   }
 };
