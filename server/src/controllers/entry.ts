@@ -83,7 +83,7 @@ const createMany = async (
   const body = req.body as [];
   for (let i = 0; i < body.length; i++) {
     const missingFields = validateFieldsExistence(
-      req.body,
+      req.body[i],
       REQUIRED_ENTRY_FIELDS
     );
     if (missingFields.length > 0) {
