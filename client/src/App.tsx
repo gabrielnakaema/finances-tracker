@@ -13,6 +13,7 @@ import NotificationMessage from './components/NotificationMessage';
 import { entriesReducer } from './reducers/entries';
 import { NotificationContext } from './contexts/NotificationContext';
 import LoadingSpinner from './components/LoadingSpinner';
+import Graphs from './components/Graphs';
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -130,6 +131,7 @@ function App() {
           <PrivateRoute path="/entries">
             <div className="flex flex-col md:flex-row-reverse">
               <EntryForm addEntries={addEntries} />
+              <Graphs data={data} />
               <EntryList
                 data={data}
                 handleDelete={handleDelete}

@@ -46,7 +46,7 @@ const EntryList = (props: EntryListProps) => {
   };
 
   return (
-    <div className="flex flex-col flex-grow items-center text-left border-gray-100 border m-3 md:w-1/2">
+    <div className="flex flex-col flex-grow items-center text-left border-gray-100 border m-3 md:w-1/3">
       <h2 className="text-gray-700 font-bold m-3 mt-5">Entry List</h2>
       <div className="flex flex-row items-center">
         <Button onClick={handleDecreaseMonth} className="px-5 py-2">
