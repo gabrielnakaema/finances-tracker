@@ -5,7 +5,6 @@ import Header from './components/Header';
 import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import EntryForm from './components/EntryForm';
-import EntryList from './components/EntryList';
 import PrivateRoute from './components/PrivateRoute';
 import { fetchAllEntries, postEntries, deleteEntry } from './services/entries';
 import { NewEntry } from './types';
@@ -13,7 +12,7 @@ import NotificationMessage from './components/NotificationMessage';
 import { entriesReducer } from './reducers/entries';
 import { NotificationContext } from './contexts/NotificationContext';
 import LoadingSpinner from './components/LoadingSpinner';
-import Graphs from './components/Graphs';
+import EntryDisplay from './components/EntryDisplay';
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -131,10 +130,9 @@ function App() {
           <PrivateRoute path="/entries">
             <div className="flex flex-col md:flex-row-reverse">
               <EntryForm addEntries={addEntries} />
-              <Graphs data={data} />
-              <EntryList
+              <EntryDisplay
                 data={data}
-                handleDelete={handleDelete}
+                deleteEntry={handleDelete}
                 isLoading={areEntriesLoading}
               />
             </div>
