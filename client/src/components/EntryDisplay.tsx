@@ -58,7 +58,7 @@ const EntryDisplay = (props: EntryDisplayProps) => {
             <div className="w-full md:w-1/2">
               <EntryList data={monthlyData} handleDelete={props.deleteEntry} />
             </div>
-            <div className="md:border border-gray-100 md:m-3">
+            <div>
               <Graphs data={monthlyData} />
             </div>
           </div>

@@ -62,35 +62,37 @@ const Graphs = (props: GraphsProps) => {
   }
   return (
     <div>
-      <div className="mt-2 w-full flex flex-col items-center">
-        <h2 className="text-gray-700 font-bold">Graph Filters</h2>
-        <div className="mx-auto">
-          <input
-            id="graph-filter-expense-radio"
-            type="radio"
-            value="expense"
-            name="graph-filter-expense-type"
-            checked={filterType === 'expense'}
-            onChange={() => setFilterType('expense')}
-          />{' '}
+      <div className="mt-5 w-full flex flex-col">
+        <h2 className="text-gray-700 font-bold mx-auto">Graph options</h2>
+        <div className="md:w-1/3">
           <label
-            className=" text-gray-700"
-            htmlFor="graph-filter-expense-radio"
+            className="block text-gray-700 font-bold"
+            htmlFor="entry-type-graph-select"
           >
-            Expense
+            Type
           </label>
-          <input
-            id="graph-filter-income-radio"
-            type="radio"
-            value="income"
-            name="graph-filter-expense-type"
-            className="ml-3"
-            checked={filterType === 'income'}
-            onChange={() => setFilterType('income')}
-          />{' '}
-          <label className=" text-gray-700" htmlFor="graph-filter-income-radio">
-            Income
-          </label>
+          <div className="inline-block relative w-full mt-2">
+            <select
+              id="entry-type-graph-select"
+              className="bg-gray-200 border-2  appearance-none border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight
+                focus:outline-none focus:bg-white focus:border-blue-500"
+              onChange={(e) => {
+                setFilterType(e.target.value);
+              }}
+            >
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+            <div className="pointer-events-none absolute right-0 flex items-center px-2 text-gray-700 inset-y-0">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
       <VictoryContainer
@@ -103,7 +105,7 @@ const Graphs = (props: GraphsProps) => {
       >
         <VictoryLabel
           x={150}
-          y={30}
+          y={40}
           text={`Monthly ${filterType} by category`}
           style={{
             fontSize: 16,
