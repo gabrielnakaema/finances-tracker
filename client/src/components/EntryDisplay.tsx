@@ -31,8 +31,8 @@ const EntryDisplay = (props: EntryDisplayProps) => {
   };
 
   return (
-    <div className=" m-3 md:w-2/3">
-      <div className="border border-gray-100 md:p-2">
+    <div className="mt-3 md:w-2/3">
+      <div className="md:border md:border-gray-100 md:p-2">
         <div className="md:w-1/3 mx-auto mt-3">
           <div className="flex flex-row items-center">
             <Button onClick={handleDecreaseMonth} className="w-1/4 py-2 ml-0">
@@ -59,7 +59,7 @@ const EntryDisplay = (props: EntryDisplayProps) => {
               <EntryList data={monthlyData} handleDelete={props.deleteEntry} />
             </div>
             <div>
-              <Graphs data={monthlyData} />
+              <Graphs monthlyData={monthlyData} allData={props.data} />
             </div>
           </div>
         ) : (
