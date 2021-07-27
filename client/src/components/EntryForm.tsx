@@ -77,7 +77,7 @@ const EntryForm = (props: EntryFormProps) => {
   };
 
   return (
-    <div className="md:w-1/2">
+    <div className="md:w-1/3">
       <div className="border-gray-100 border m-3 p-3 pt-5">
         <h2 className="block font-bold text-gray-700 mx-3">Add New Entry</h2>
         <form className="text-left" onSubmit={handleSubmit}>
