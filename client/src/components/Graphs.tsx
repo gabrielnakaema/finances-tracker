@@ -125,16 +125,14 @@ const Graphs = (props: GraphsProps) => {
       (acc, entry) => {
         if (isSameYear(parseISO(entry.date), today)) {
           if (acc[entry.type]) {
-            const { value } = acc[entry.type][getMonth(parseISO(entry.date))];
+            const entryMonth = getMonth(parseISO(entry.date));
             return {
               ...acc,
-              [entry.type]: [
-                ...acc[entry.type],
-                (acc[entry.type][getMonth(parseISO(entry.date))] = {
-                  month: acc[entry.type][getMonth(parseISO(entry.date))].month,
-                  value: value + entry.value,
-                }),
-              ],
+              [entry.type]: acc[entry.type].map((el, index) =>
+                entryMonth === index
+                  ? { ...el, value: el.value + entry.value }
+                  : el
+              ),
             };
           } else {
             return acc;
@@ -198,7 +196,7 @@ const Graphs = (props: GraphsProps) => {
       <h2 className="text-gray-700 font-bold mx-auto mt-5">{`Monthly ${filterType} by category`}</h2>
       <div className="px-10 md:w-1/3 md:px-0">
         <label
-          className="block text-gray-700 font-bold"
+          className="block text-gray-700 font-bold mt-5"
           htmlFor="entry-type-graph-select"
         >
           Entry type
@@ -229,7 +227,14 @@ const Graphs = (props: GraphsProps) => {
       </div>
       <div className="flex flex-col md:flex-row">
         <div className="md:w-2/3">
-          <VictoryContainer height={375} width={375}>
+          <VictoryContainer
+            height={375}
+            width={375}
+            style={{
+              userSelect: 'auto',
+              touchAction: 'auto',
+            }}
+          >
             <VictoryPie
               standalone={false}
               data={dataToPlot}
@@ -295,19 +300,42 @@ const Graphs = (props: GraphsProps) => {
         <h2 className="text-gray-700 font-bold mx-auto text-center">
           Balance by month in {getYear(new Date())}
         </h2>
-        <VictoryChart scale={{ x: 'time' }}>
+        <VictoryChart
+          scale={{ x: 'time' }}
+          containerComponent={
+            <VictoryContainer
+              style={{
+                pointerEvents: 'auto',
+                userSelect: 'auto',
+                touchAction: 'auto',
+              }}
+            />
+          }
+        >
           <VictoryGroup colorScale={['red', 'green']} offset={10}>
             <VictoryBar
               data={dataByMonth.expense}
               x="month"
               y="value"
               barWidth={10}
+              style={{
+                data: {
+                  stroke: '#374151',
+                  strokeWidth: 1,
+                },
+              }}
             />
             <VictoryBar
               data={dataByMonth.income}
               x="month"
               y="value"
               barWidth={10}
+              style={{
+                data: {
+                  stroke: '#374151',
+                  strokeWidth: 1,
+                },
+              }}
             />
           </VictoryGroup>
         </VictoryChart>
