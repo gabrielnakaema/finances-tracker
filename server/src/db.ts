@@ -7,8 +7,8 @@ const DB_PORT = process.env.DB_PORT as string;
 const MONGO_INITDB_DATABASE = process.env.MONGO_INITDB_DATABASE as string;
 
 const mongoURI = DB_PORT
-  ? `mongodb://${DB_HOST}/${MONGO_INITDB_DATABASE}:${DB_PORT}`
-  : `mongodb+srv://${DB_HOST}/${MONGO_INITDB_DATABASE}`;
+  ? `${DB_HOST}/${MONGO_INITDB_DATABASE}:${DB_PORT}`
+  : `${DB_HOST}/${MONGO_INITDB_DATABASE}`;
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
