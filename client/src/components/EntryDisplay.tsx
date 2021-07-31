@@ -31,10 +31,10 @@ const EntryDisplay = (props: EntryDisplayProps) => {
   };
 
   return (
-    <div className="mt-3 md:w-2/3">
-      <div className="md:border md:border-gray-100 md:p-2">
+    <div className="mt-3 m-3 md:w-2/3">
+      <div className="md:border md:border-gray-100">
         <div className="md:w-1/3 mx-auto mt-3">
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center mx-10 mt-5">
             <Button onClick={handleDecreaseMonth} className="w-1/4 py-2 ml-0">
               {'<'}
             </Button>
@@ -63,7 +63,7 @@ const EntryDisplay = (props: EntryDisplayProps) => {
             </div>
           </div>
         ) : (
-          <div className="h-screen text-center mt-5">
+          <div className="h-screen text-center mt-7">
             <p className="text-gray-500">No entries for this month</p>
           </div>
         )}

@@ -193,10 +193,10 @@ const Graphs = (props: GraphsProps) => {
 
   return (
     <div className="mt-5 w-full flex flex-col">
-      <h2 className="text-gray-700 font-bold mx-auto mt-5">{`Monthly ${filterType} by category`}</h2>
+      <h2 className="text-gray-700 font-bold mx-auto">{`Monthly ${filterType} by category`}</h2>
       <div className="px-10 md:w-1/3 md:px-0">
         <label
-          className="block text-gray-700 font-bold mt-5"
+          className="block text-gray-700 font-bold mt-8"
           htmlFor="entry-type-graph-select"
         >
           Entry type

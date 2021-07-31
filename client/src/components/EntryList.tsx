@@ -8,7 +8,7 @@ interface EntryListProps {
 
 const EntryList = (props: EntryListProps) => {
   return (
-    <div className="flex flex-col items-center min-h-screen">
+    <div className="flex flex-col items-center min-h-screen px-8 md:px-16">
       <h2 className="text-gray-700 font-bold mt-5">Entries</h2>
       {props.data.map((el) => (
         <EntryItem
