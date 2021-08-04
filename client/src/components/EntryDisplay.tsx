@@ -1,7 +1,7 @@
 import Graphs from './Graphs';
 import Button from './Button';
 import isSameMonth from 'date-fns/isSameMonth';
-import parseISO from 'date-fns/parseISO';
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import addMonths from 'date-fns/addMonths';
 import format from 'date-fns/format';
 import { Entry } from '../types';
@@ -18,7 +18,7 @@ interface EntryDisplayProps {
 const EntryDisplay = (props: EntryDisplayProps) => {
   const [filterDate, setFilterDate] = useState(new Date());
   const monthlyData = props.data.filter((entry) =>
-    isSameMonth(filterDate, parseISO(entry.date))
+    isSameMonth(filterDate, entry.date)
   );
   const formattedDate: string = format(filterDate, 'MMMM, yyyy');
 
@@ -36,16 +36,16 @@ const EntryDisplay = (props: EntryDisplayProps) => {
         <div className="md:w-1/3 mx-auto mt-3">
           <div className="flex flex-row items-center mx-10 mt-5">
             <Button onClick={handleDecreaseMonth} className="w-1/4 py-2 ml-0">
-              {'<'}
+              <MdChevronLeft className="mx-auto" strokeWidth="1.5" />
             </Button>
             <span className="whitespace-nowrap text-gray-700 font-bold">
               {formattedDate}
             </span>
             <Button
               onClick={handleIncreaseMonth}
-              className="w-1/4 py-2 mr-0 ml-auto"
+              className="w-1/4 mr-0 ml-auto"
             >
-              {'>'}
+              <MdChevronRight className="mx-auto" strokeWidth="1.5" />
             </Button>
           </div>
         </div>

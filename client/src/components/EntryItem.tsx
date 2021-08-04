@@ -1,6 +1,5 @@
 import { CgTrash } from 'react-icons/cg';
 import format from 'date-fns/format';
-import parseISO from 'date-fns/parseISO';
 import CategoryIcon from './CategoryIcon';
 import { Entry } from '../types';
 
@@ -42,7 +41,7 @@ const EntryItem = (props: EntryItemProps) => {
               </span>
             )}
             <span className="text-gray-500">
-              {format(parseISO(props.entry.date), 'MMM dd')}
+              {format(props.entry.date, 'MMM dd')}
             </span>
           </div>
         </div>

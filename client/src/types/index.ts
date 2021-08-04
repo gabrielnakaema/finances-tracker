@@ -19,7 +19,7 @@ export interface Entry {
   description: string;
   category: Categories;
   type: EntryTypes;
-  date: string;
+  date: Date;
   createdBy: string;
   createdAt: string;
   updatedAt: string;

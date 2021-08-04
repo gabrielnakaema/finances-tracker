@@ -11,10 +11,10 @@ import {
 } from 'victory';
 import getMonth from 'date-fns/getMonth';
 import isSameYear from 'date-fns/isSameYear';
-import parseISO from 'date-fns/parseISO';
 import getYear from 'date-fns/getYear';
 import { ImCross } from 'react-icons/im';
 import { Entry } from '../types';
+import Select from './Select';
 
 interface GraphsProps {
   monthlyData: Entry[];
@@ -34,21 +34,38 @@ interface PieChartLegend {
   active?: boolean;
 }
 
+const pieChartColorScale = [
+  '#003f5c',
+  '#2f4b7c',
+  '#665191',
+  '#a05195',
+  '#d45087',
+  '#f95d6a',
+  '#ff7c43',
+  '#ffa600',
+];
+
+const categoriesLabels = {
+  stocks: 'Stocks',
+  health: 'Health',
+  transport: 'Transport',
+  mainSalary: 'Main salary',
+  housing: 'Housing',
+  food: 'Food',
+  utilities: 'Utilities',
+  savings: 'Savings',
+  entertainment: 'Entertainment',
+  sideIncome: 'Side income',
+  other: 'Other',
+} as {
+  [key: string]: string;
+};
+
 const Graphs = (props: GraphsProps) => {
   const [filterType, setFilterType] = useState('expense');
   const [filterCategories, setFilterCategories] = useState<PieChartLegend[]>(
     []
   );
-  const pieChartColorScale = [
-    '#003f5c',
-    '#2f4b7c',
-    '#665191',
-    '#a05195',
-    '#d45087',
-    '#f95d6a',
-    '#ff7c43',
-    '#ffa600',
-  ];
 
   useEffect(() => {
     const categories: PieChartLegend[] = [];
@@ -78,6 +95,10 @@ const Graphs = (props: GraphsProps) => {
       }
     });
     setFilterCategories(newArray);
+  };
+
+  const onFilterTypeChange = (text: string) => {
+    setFilterType(text);
   };
 
   const totalsByTypeAndCategory: ByTypeAndCategory = {};
@@ -123,9 +144,9 @@ const Graphs = (props: GraphsProps) => {
     const today = new Date();
     return props.allData.reduce(
       (acc, entry) => {
-        if (isSameYear(parseISO(entry.date), today)) {
+        if (isSameYear(entry.date, today)) {
           if (acc[entry.type]) {
-            const entryMonth = getMonth(parseISO(entry.date));
+            const entryMonth = getMonth(entry.date);
             return {
               ...acc,
               [entry.type]: acc[entry.type].map((el, index) =>
@@ -175,22 +196,6 @@ const Graphs = (props: GraphsProps) => {
 
   const dataByMonth = extractMonthlyData();
 
-  const categoriesLabels = {
-    stocks: 'Stocks',
-    health: 'Health',
-    transport: 'Transport',
-    mainSalary: 'Main salary',
-    housing: 'Housing',
-    food: 'Food',
-    utilities: 'Utilities',
-    savings: 'Savings',
-    entertainment: 'Entertainment',
-    sideIncome: 'Side income',
-    other: 'Other',
-  } as {
-    [key: string]: string;
-  };
-
   return (
     <div className="mt-5 w-full flex flex-col">
       <h2 className="text-gray-700 font-bold mx-auto">{`Monthly ${filterType} by category`}</h2>
@@ -201,29 +206,21 @@ const Graphs = (props: GraphsProps) => {
         >
           Entry type
         </label>
-        <div className="inline-block relative w-full mt-2">
-          <select
-            id="entry-type-graph-select"
-            className="bg-gray-200 border-2  appearance-none border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight
-                focus:outline-none focus:bg-white focus:border-blue-500"
-            onChange={(e) => {
-              setFilterType(e.target.value);
-            }}
-            value={filterType}
-          >
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-          </select>
-          <div className="pointer-events-none absolute right-0 flex items-center px-2 text-gray-700 inset-y-0">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
-          </div>
-        </div>
+        <Select
+          onChange={onFilterTypeChange}
+          value={filterType}
+          options={[
+            {
+              value: 'expense',
+              label: 'Expense',
+            },
+            {
+              value: 'income',
+              label: 'Income',
+            },
+          ]}
+          id="entry-type-graph-select"
+        />
       </div>
       <div className="flex flex-col md:flex-row">
         <div className="md:w-2/3">

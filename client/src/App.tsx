@@ -122,7 +122,7 @@ function App() {
             {authContext.user ? <Redirect to="/entries" /> : <SignInForm />}
           </Route>
           <Route path="/signup">
-            <SignUpForm />
+            {authContext.user ? <Redirect to="/entries" /> : <SignUpForm />}
           </Route>
           <Route exact path="/">
             <Redirect to="/entries" />

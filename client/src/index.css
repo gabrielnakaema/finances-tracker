@@ -5,3 +5,11 @@
 .react-datepicker-wrapper {
   @apply w-full;
 }
+
+.react-datepicker__day--selected {
+  @apply bg-blue-500;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply bg-blue-500;
+}

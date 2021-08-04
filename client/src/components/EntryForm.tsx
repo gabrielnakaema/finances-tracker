@@ -9,12 +9,66 @@ import {
   validateRecurringMonths,
 } from '../utils/validation';
 import DatePicker from './DatePicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import Button from './Button';
+import Select from './Select';
 
 interface EntryFormProps {
   addEntries: (newEntries: NewEntry[]) => void;
 }
+
+const expenseCategories = [
+  {
+    value: 'health',
+    label: 'Health',
+  },
+  {
+    value: 'transport',
+    label: 'Transport',
+  },
+  {
+    value: 'housing',
+    label: 'Housing',
+  },
+  {
+    value: 'food',
+    label: 'Food',
+  },
+  {
+    value: 'utilities',
+    label: 'Utilities',
+  },
+  {
+    value: 'savings',
+    label: 'Savings',
+  },
+  {
+    value: 'entertainment',
+    label: 'Entertainment',
+  },
+  {
+    value: 'other',
+    label: 'Other',
+  },
+];
+
+const incomeCategories = [
+  {
+    value: 'stocks',
+    label: 'Stocks',
+  },
+  {
+    value: 'sideIncome',
+    label: 'Side income',
+  },
+  {
+    value: 'mainSalary',
+    label: 'Main salary',
+  },
+  {
+    value: 'other',
+    label: 'Other',
+  },
+];
 
 const EntryForm = (props: EntryFormProps) => {
   const [isExpense, setIsExpense] = useState(true);
@@ -24,8 +78,8 @@ const EntryForm = (props: EntryFormProps) => {
   const recurringMonths = useTextField('number', validateRecurringMonths, '0');
   const [date, setDate] = useState(new Date());
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const category = e.target.value as Categories;
+  const handleCategoryChange = (text: string) => {
+    const category = text as Categories;
     setCategory(category);
   };
 
@@ -50,6 +104,7 @@ const EntryForm = (props: EntryFormProps) => {
       recurringMonths.reset();
       setCategory('other');
       setIsExpense(true);
+      setDate(new Date());
     }
     const newEntry: NewEntry = {
       value: Number(value.value),
@@ -108,7 +163,10 @@ const EntryForm = (props: EntryFormProps) => {
                 value="expense"
                 name="expense-type"
                 checked={isExpense}
-                onChange={() => setIsExpense(true)}
+                onChange={() => {
+                  setIsExpense(true);
+                  setCategory('other');
+                }}
               />{' '}
               <label className=" text-gray-700" htmlFor="expense-radio">
                 Expense
@@ -120,7 +178,10 @@ const EntryForm = (props: EntryFormProps) => {
                 name="expense-type"
                 className="ml-3"
                 checked={!isExpense}
-                onChange={() => setIsExpense(false)}
+                onChange={() => {
+                  setIsExpense(false);
+                  setCategory('other');
+                }}
               />{' '}
               <label className=" text-gray-700" htmlFor="income-radio">
                 Income
@@ -133,48 +194,21 @@ const EntryForm = (props: EntryFormProps) => {
               >
                 Category
               </label>
-              <div className="inline-block relative w-full">
-                {isExpense ? (
-                  <select
-                    id="category-select"
-                    value={category}
-                    onChange={handleCategoryChange}
-                    className="bg-gray-200 border-2  appearance-none border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight
-                focus:outline-none focus:bg-white focus:border-blue-500"
-                  >
-                    <option value="entertainment">Entertainment</option>
-                    <option value="food">Food</option>
-                    <option value="health">Health</option>
-                    <option value="housing">Housing</option>
-                    <option value="savings">Savings</option>
-                    <option value="transport">Transport</option>
-                    <option value="utilities">Utilities</option>
-                    <option value="other">Other</option>
-                  </select>
-                ) : (
-                  <select
-                    id="category-select"
-                    value={category}
-                    onChange={handleCategoryChange}
-                    className="bg-gray-200 border-2  appearance-none border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight
-                  focus:outline-none focus:bg-white focus:border-blue-500"
-                  >
-                    <option value="mainSalary">Salary</option>
-                    <option value="sideIncome">Side Income</option>
-                    <option value="stocks">Stocks</option>
-                    <option value="other">Other</option>
-                  </select>
-                )}
-                <div className="pointer-events-none absolute right-0 flex items-center px-2 text-gray-700 inset-y-0">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
-              </div>
+              {isExpense ? (
+                <Select
+                  onChange={handleCategoryChange}
+                  value={category}
+                  id="category-select"
+                  options={expenseCategories}
+                />
+              ) : (
+                <Select
+                  onChange={handleCategoryChange}
+                  value={category}
+                  id="category-select"
+                  options={incomeCategories}
+                />
+              )}
             </div>
             <DatePicker date={date} onChange={handleDateChange} />
             <div className="my-4 mx-3 text-center">
