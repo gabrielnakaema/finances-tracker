@@ -8,6 +8,7 @@ import { Entry } from '../types';
 import { useState } from 'react';
 import EntryList from './EntryList';
 import LoadingSpinner from './LoadingSpinner';
+import getYear from 'date-fns/getYear';
 
 interface EntryDisplayProps {
   data: Entry[];
@@ -21,6 +22,7 @@ const EntryDisplay = (props: EntryDisplayProps) => {
     isSameMonth(filterDate, entry.date)
   );
   const formattedDate: string = format(filterDate, 'MMMM, yyyy');
+  const filterYear = getYear(filterDate);
 
   const handleDecreaseMonth = () => {
     setFilterDate(addMonths(filterDate, -1));
@@ -59,7 +61,11 @@ const EntryDisplay = (props: EntryDisplayProps) => {
               <EntryList data={monthlyData} handleDelete={props.deleteEntry} />
             </div>
             <div>
-              <Graphs monthlyData={monthlyData} allData={props.data} />
+              <Graphs
+                monthlyData={monthlyData}
+                allData={props.data}
+                selectedYear={filterYear}
+              />
             </div>
           </div>
         ) : (

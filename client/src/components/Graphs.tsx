@@ -11,7 +11,6 @@ import {
 } from 'victory';
 import getMonth from 'date-fns/getMonth';
 import isSameYear from 'date-fns/isSameYear';
-import getYear from 'date-fns/getYear';
 import { ImCross } from 'react-icons/im';
 import { Entry } from '../types';
 import Select from './Select';
@@ -19,6 +18,7 @@ import Select from './Select';
 interface GraphsProps {
   monthlyData: Entry[];
   allData: Entry[];
+  selectedYear: number;
 }
 
 interface ByTypeAndCategory {
@@ -141,10 +141,10 @@ const Graphs = (props: GraphsProps) => {
   }
 
   const extractMonthlyData = () => {
-    const today = new Date();
+    const filterDate = new Date(props.selectedYear, 1, 1);
     return props.allData.reduce(
       (acc, entry) => {
-        if (isSameYear(entry.date, today)) {
+        if (isSameYear(entry.date, filterDate)) {
           if (acc[entry.type]) {
             const entryMonth = getMonth(entry.date);
             return {
@@ -295,7 +295,7 @@ const Graphs = (props: GraphsProps) => {
       </div>
       <div className="w-full mt-14">
         <h2 className="text-gray-700 font-bold mx-auto text-center">
-          Balance by month in {getYear(new Date())}
+          Balance by month in {props.selectedYear}
         </h2>
         <VictoryChart
           scale={{ x: 'time' }}
